@@ -2,13 +2,20 @@ import {Button, Col, Layout, Menu, Row} from 'antd';
 import styles from '../../styles/content.module.scss';
 import {HomeOutlined, PlusOutlined, UserOutlined, UserSwitchOutlined} from '@ant-design/icons';
 import ReactHlsPlayer from 'react-hls-player';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import VideoPlayer from '@/components/content/VideoPlayer';
 import UserList from '@/components/content/UserList';
 
 const VmsContent = ({user}) => {
-  const [contentPage, setContentPage] = useState("1");
+  const [contentPage, setContentPage] = useState("2");
+  const router = useRouter();
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('access_token');
+    if(!isLoggedIn) {
+      router.push('/login');
+    }
+  })
 
   const menuItems = [
     {

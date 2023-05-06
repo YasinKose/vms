@@ -96,7 +96,7 @@ const LoginForm = () => {
       destroyOnClose={true}
       width={600}
       title='Şifre Sıfırlama'
-      visible={resetPassword}
+      open={resetPassword}
       onCancel={() => setResetPassword(false)}
       footer={false}>
       <Form
@@ -119,7 +119,7 @@ const LoginForm = () => {
       destroyOnClose={true}
       width={600}
       title='Şifre Sıfırlama'
-      visible={resetPasswordFormInputs}
+      open={resetPasswordFormInputs}
       onCancel={() => setResetPasswordFormInputs(false)}
       footer={false}>
       <Form
