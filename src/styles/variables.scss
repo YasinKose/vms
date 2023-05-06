@@ -1,0 +1,14 @@
+$white: #fff;
+$salmon: #f7c6b0;
+$skyBlue: #e6f7ff;
+$deepBlue: #6767f3;
+$borderRadius: 12px;
+$halfBorderRadius: 6px;
+
+@mixin flexBox($alignment, $justify, $direction, $wrap) {
+  display: flex;
+  align-items: $alignment;
+  justify-content: $justify;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+}
