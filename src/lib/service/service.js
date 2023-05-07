@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://api.captfx.com/',
+  baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
     'Content-type': 'application/json',
   },
 });
 
 const axiosInstanceFileUpload = axios.create({
-  baseURL: 'https://api.captfx.com/',
+  baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
     'Content-type': 'multipart/form-data',
   }
