@@ -1,0 +1,63 @@
+@import './variables';
+
+.layoutWrapper {
+  .sideWrapper {
+    margin-right: .5rem;
+  }
+
+  .contentWrapper {
+    margin-left: .5rem;
+    .videoDescription {
+      margin-top: .5rem;
+    }
+
+    .playerHeader {
+      line-height: 1.5rem;
+      @include flexBox(center, space-between, row, wrap);
+
+      .playerHeaderBlock {
+        display: inline-block;
+        width: .75rem;
+        height: 1.5rem;
+        background-color: $salmon;
+        border-radius: $borderRadius;
+        margin-right: 1rem;
+      }
+
+      .playerInformation {
+        @include flexBox(center, space-between, row, wrap);
+        line-height: 1.5rem;
+
+        .playerParticipants {
+          width: 180px;
+          @include flexBox(center, space-around, row, wrap);
+          .participant {
+            background-color: $skyBlue;
+            color: $deepBlue;
+            border-radius: $halfBorderRadius;
+            padding: .15rem;
+          }
+        }
+        button {
+          margin-left: .5rem;
+        }
+      }
+    }
+    .videoPlayerWrapper {
+      height: 500px;
+      border-radius: $borderRadius;
+      margin-top: 1rem;
+      video {
+        border-radius: $borderRadius;
+        height: 100%;
+        background-color: #000;
+      }
+    }
+  }
+}
+
+.sideWrapper, .contentWrapper {
+  padding: 1rem 2rem;
+  background: $white !important;
+  border-radius: $borderRadius;
+}

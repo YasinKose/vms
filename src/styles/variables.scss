@@ -1,0 +1,21 @@
+$white: #fff;
+$salmon: #f7c6b0;
+$skyBlue: #e6f7ff;
+$deepBlue: #6767f3;
+$softRed: #ffd6d6;
+$midRed: #f68d8d;
+$deepRed: #de1b1b;
+$softYellow: #fdf3c1;
+$midYellow: #f5f57c;
+$deepYellow: #deb71b;
+$borderRadius: 12px;
+$halfBorderRadius: 6px;
+$fullRadius: 100%;
+
+@mixin flexBox($alignment, $justify, $direction, $wrap) {
+  display: flex;
+  align-items: $alignment;
+  justify-content: $justify;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+}

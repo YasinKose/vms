@@ -1,0 +1,27 @@
+@import './variables';
+
+.tableActions {
+  @include flexBox(center, space-between, row, wrap);
+  .deleteButton {
+    cursor: pointer;
+    background-color: $softRed;
+    color: $deepRed;
+    padding: .35rem;
+    border-radius: $fullRadius;
+    transition: .25s;
+    &:hover {
+      background-color: $midRed;
+    }
+  }
+  .editButton {
+    cursor: pointer;
+    background-color: $softYellow;
+    color: $deepYellow;
+    padding: .35rem;
+    border-radius: $fullRadius;
+    transition: .25s;
+    &:hover {
+      background-color: $midYellow;
+    }
+  }
+}

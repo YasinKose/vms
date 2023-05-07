@@ -1,0 +1,33 @@
+@import './variables';
+
+.reusableFormWrapper {
+  border-radius: $borderRadius;
+}
+.formWrapper {
+  height: calc(100vh - 1rem);
+  border-radius: $borderRadius;
+  @include flexBox(center, center, column, wrap);
+  .form {
+    padding: 2rem;
+    border-radius: $borderRadius;
+    background-color: #fff;
+    width: 350px;
+    @include flexBox(center, center, column, wrap);
+    div, input {
+      width: 100% !important;
+    }
+    img {
+      height: auto;
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+    input {
+      width: 100%;
+    }
+    .actionWrapper {
+      margin-top: 1rem;
+      width: 100%;
+      @include flexBox(center, space-between, row, wrap);
+    }
+  }
+}
