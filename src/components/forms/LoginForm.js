@@ -6,6 +6,7 @@ import logo from '../../assets/images/logo.jpeg';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import Link from 'next/link';
+import {useClientError} from '@/hooks/useClientError';
 
 const LoginForm = () => {
   const [resetPassword, setResetPassword] = useState(false);
@@ -14,6 +15,7 @@ const LoginForm = () => {
   const [resetPasswordForm] = Form.useForm();
   const [resetPasswordFormWithToken] = Form.useForm();
   const router = useRouter();
+  const clientError = useClientError();
 
   useEffect(() => {
     if (localStorage.getItem('access_token')) {
@@ -35,7 +37,7 @@ const LoginForm = () => {
         message.error(response.data.message);
       }
     }).catch(error => {
-      message.error(error.response.data.message ? error.response.data.message : error.response.data.errors.token ? error.response.data.errors.token[0] : error.response.data.errors[0]);
+      clientError(error);
     })
   }
 
@@ -49,7 +51,7 @@ const LoginForm = () => {
         message.error(response.data.message);
       }
     }).catch(error => {
-      message.error(error.response.data.message ? error.response.data.message : error.response.data.errors.email[0]);
+      clientError(error);
     })
   }
 
@@ -65,7 +67,7 @@ const LoginForm = () => {
           return message.error(response.data.message);
         }
       }).catch(error => {
-        message.error(error.response.data.message ? error.response.data.message : error.response.data.errors[0]);
+        clientError(error);
       })
     } else {
       return message.error('Giriş yapmak için lütfen alanları doldurunuz.')

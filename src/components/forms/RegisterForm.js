@@ -5,10 +5,12 @@ import Image from 'next/image';
 import logo from '../../assets/images/logo.jpeg';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import {useClientError} from '@/hooks/useClientError';
 
 const LoginForm = () => {
   const [registerForm] = Form.useForm();
   const router = useRouter();
+  const clientError = useClientError();
 
   const registerFormHandler = (formValues) => {
     const isEmpty = Object.values(formValues).every(x => x === null || x === '');
@@ -25,7 +27,7 @@ const LoginForm = () => {
           return message.error(response.data.message);
         }
       }).catch(error => {
-        message.error(error.response.data.message ? error.response.data.message : error.response.data.errors[0]);
+        clientError(error);
       })
     }
     else {

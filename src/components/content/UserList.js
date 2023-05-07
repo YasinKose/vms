@@ -2,77 +2,126 @@ import {Button, Col, Form, Input, Modal, Row, Table} from 'antd';
 import {useEffect, useState} from 'react';
 import {getUserList} from '@/components/content/ContentManager';
 import styles from '../../styles/list.module.scss';
-import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import UserManagementModal from '@/components/forms/UserManagementModal';
 
 const UserList = () => {
   const [userModal, setUserModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [dataSource, setDataSource] = useState([]);
   const [userDetails, setUserDetails] = useState({});
-
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-  ];
 
   const columns = [
     {
-      title: 'Name',
+      title: 'İsim',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Soyisim',
+      dataIndex: 'surname',
+      key: 'surname',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Rol',
+      dataIndex: 'roles',
+      key: 'roles',
+      render: (role) => role === 'staff' ? 'Staff' : 'Müşteri'
+    },
+    {
+      title: 'Onaylı',
+      dataIndex: 'verified',
+      key: 'verified',
+      render: (a) => a ? <CheckOutlined/> : <CloseOutlined/>
+    },
+    {
+      title: 'Admin',
+      dataIndex: 'is_admin',
+      key: 'is_admin',
+      render: (a) => a ? <CheckOutlined/> : <CloseOutlined/>
     },
     {
       title: 'Aksiyon',
-      dataIndex: 'address',
+      dataIndex: '',
       key: 'action',
       width: '65px',
       render: (item) => <div className={styles['tableActions']}>
-        <DeleteOutlined className={styles['deleteButton']} onClick={() => console.log(item)}/>
-        <EditOutlined className={styles['editButton']} onClick={() => console.log(item)}/>
+        <DeleteOutlined className={styles['deleteButton']} onClick={() => actionClickHandler(item, 'delete')}/>
+        <EditOutlined className={styles['editButton']} onClick={() => actionClickHandler(item, 'edit')}/>
       </div>
     },
   ];
 
-  useEffect(() => {
+  const deleteMethodHandler = () => {
+    console.log(userDetails)
+  }
+
+  const getUserHandler = () => {
     getUserList().then(response => {
-      console.log(response)
+      if (response.status === 200) {
+        for (let user of response.data.attr) {
+          user['key'] = user.uuid
+        }
+        setDataSource(response.data.attr);
+      }
     })
-  }, [])
+  }
+
+  useEffect(() => {
+    getUserHandler();
+  }, []);
+
+  const actionClickHandler = (details, type) => {
+    setUserDetails(details);
+    if(type === 'delete') {
+      setDeleteModal(true);
+    }
+    if(type === 'edit') {
+      setUserModal(true);
+    }
+  }
+
+  const revoke = () => {
+    setUserModal(false);
+    setUserDetails({});
+    getUserHandler();
+  }
 
   return <Row gutter={[16, 16]}>
     <Col span={24}>
       <Button type='primary' onClick={() => setUserModal(true)}>Kullanıcı Ekle</Button>
     </Col>
     <Col span={24}>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table  dataSource={dataSource} columns={columns}/>
     </Col>
     <Modal
       destroyOnClose={true}
       width={600}
-      title={Object.values(userDetails).every(x => x === null || x === '') ? 'Kullanıcı Oluştur' : 'Kullanıcıyı Düzenle'}
+      title={Object.values(userDetails).length === 0 ? 'Kullanıcı Oluştur' : 'Kullanıcıyı Düzenle'}
       open={userModal}
-      onCancel={() => setUserModal(false)}
+      onCancel={() => {
+        setUserModal(false);
+        setUserDetails({});
+      }}
       footer={false}>
-      <UserManagementModal userDetails={userDetails}/>
+      <UserManagementModal revokeHandler={revoke} userDetails={userDetails}/>
+    </Modal>
+    <Modal
+      destroyOnClose={true}
+      width={600}
+      title='Kullanıcı Silme Uyarısı'
+      open={deleteModal}
+      onCancel={() => {
+        setDeleteModal(false);
+        setUserDetails({});
+      }}
+      onOk={deleteMethodHandler}>
+      {userDetails.name + ' ' + userDetails.surname} kullanıcısı silinecek onaylıyor musunuz?
     </Modal>
   </Row>;
 }
