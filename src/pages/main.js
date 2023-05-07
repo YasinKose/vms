@@ -6,9 +6,10 @@ import {getProfileInformation} from '../HomeManager';
 import {useNavigate} from 'react-router-dom';
 
 function Home() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const clientError = useClientError();
   const navigate = useNavigate();
+
   useEffect(() => {
     if(localStorage.getItem('access_token')) {
       getProfileInformation().then(response => {
