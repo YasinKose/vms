@@ -1,23 +1,62 @@
-import {Button, Col, Row} from 'antd';
+import {Button, Col, Row, message, Modal} from 'antd';
 import styles from '@/styles/content.module.scss';
-import {PlusOutlined, UserOutlined} from '@ant-design/icons';
+import {EditOutlined, VideoCameraAddOutlined} from '@ant-design/icons';
 import ReactHlsPlayer from 'react-hls-player';
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {getVideoWatch} from '@/components/content/ContentManager';
+import {useClientError} from '@/hooks/useClientError';
+import Loading from '@/components/Loading';
+import VideoManagementModal from '@/components/forms/VideoManagementModal';
 
-const VideoPlayer = () => {
+const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
+  if(Object.values(videoDetails).length === 0) {
+    return <Loading/>
+  }
 
+  const [videoWatch, setVideoWatch] = useState({});
+  const [loadingVideo, setLoadingVideo] = useState(true);
+  const [addVideoModal, setAddVideoModal] = useState(false);
+  const [videoEdit, setVideoEdit] = useState(false);
+
+  const clientError = useClientError();
   const playerRef = useRef();
 
-  function playVideo() {
-    playerRef.current.play();
+  useEffect(() => {
+    getVideWatchDetails();
+  }, [videoDetails])
+
+  const getVideWatchDetails = () => {
+    console.log(videoDetails)
+    setLoadingVideo(true);
+    getVideoWatch(videoDetails.slug).then(response => {
+      if(response.status === 200) {
+        setVideoWatch(response.data.attr);
+        setLoadingVideo(false);
+      }
+      else {
+        message.error('Video hazırlanamadı.')
+        setLoadingVideo(false);
+      }
+    }).catch(error => {
+      clientError(error);
+      setLoadingVideo(false);
+    })
   }
 
-  function pauseVideo() {
-    playerRef.current.pause();
-  }
-
-  function toggleControls() {
-    playerRef.current.controls = !playerRef.current.controls;
+  const videoMaker = () => {
+    if(videoWatch.watched_video.hls_url === null) {
+      getVideWatchDetails();
+    }
+    else {
+      return <ReactHlsPlayer
+        playerRef={playerRef}
+        src={videoWatch.watched_video.hls_url}
+        autoPlay={false}
+        controls={true}
+        width='100%'
+        height='auto'
+      />
+    }
   }
 
   return <Row>
@@ -25,11 +64,12 @@ const VideoPlayer = () => {
       <div>
         <span className={styles['playerHeaderBlock']}>&nbsp;</span>
         <strong>
-          Live Class - User Persona
+          {videoDetails.title}
         </strong>
       </div>
       <div className={styles['playerInformation']}>
-        <div className={styles['playerParticipants']}>
+        {/*
+          <div className={styles['playerParticipants']}>
           <UserOutlined/>
           <span>
                 Joined Classmates
@@ -38,19 +78,34 @@ const VideoPlayer = () => {
                 34
               </span>
         </div>
-        <Button type='primary' icon={<PlusOutlined/>}>Invite</Button>
+        */}
+        {user?.is_admin && <Button onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>}
+        {user?.is_admin && <Button onClick={() => {
+          setAddVideoModal(true);
+          setVideoEdit(true);
+        }} type='dashed' icon={<EditOutlined />}>Video Düzenle</Button>}
       </div>
     </Col>
-    <Col span={24} className={styles['videoPlayerWrapper']}>
-      <ReactHlsPlayer
-        playerRef={playerRef}
-        src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-        autoPlay={false}
-        controls={true}
-        width="100%"
-        height="auto"
-      />
+    <Col span={24}>
+      <p className={styles['videoDescription']}>
+        {videoDetails.description}
+      </p>
     </Col>
+    <Col span={24} className={styles['videoPlayerWrapper']}>
+      {Object.values(videoWatch).length === 0 || loadingVideo ? <Loading/> : videoMaker() }
+    </Col>
+    <Modal
+      destroyOnClose={true}
+      width={600}
+      title='Video Ekle'
+      open={addVideoModal}
+      onCancel={() => setAddVideoModal(false)}
+      footer={false}>
+      <VideoManagementModal revokeHandler={() => {
+        setAddVideoModal(false);
+        revokeHandler();
+      }} isEdit={videoEdit} videoDetails={videoDetails}/>
+    </Modal>
   </Row>
 }
 

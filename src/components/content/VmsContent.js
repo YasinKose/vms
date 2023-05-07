@@ -1,23 +1,19 @@
-import {Button, Col, Layout, Menu, Row} from 'antd';
+import {message, Col, Layout, Menu, Spin,} from 'antd';
 import styles from '../../styles/content.module.scss';
-import {HomeOutlined, PlusOutlined, UserOutlined, UserSwitchOutlined} from '@ant-design/icons';
-import ReactHlsPlayer from 'react-hls-player';
-import {useEffect, useRef, useState} from 'react';
+import {HomeOutlined, UserSwitchOutlined, VideoCameraOutlined} from '@ant-design/icons';
+import {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import VideoPlayer from '@/components/content/VideoPlayer';
 import UserList from '@/components/content/UserList';
+import {getVideos} from '@/components/content/ContentManager';
+import {useClientError} from '@/hooks/useClientError';
 
 const VmsContent = ({user}) => {
-  const [contentPage, setContentPage] = useState("2");
-  const router = useRouter();
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem('access_token');
-    if(!isLoggedIn) {
-      router.push('/login');
-    }
-  })
+  if(!user || Object.values(user).length === 0) {
+    return <Spin/>
+  }
 
-  const menuItems = [
+  let menuItemList = [
     {
       label: 'Video',
       icon: <HomeOutlined/>,
@@ -31,21 +27,68 @@ const VmsContent = ({user}) => {
     }
   ]
 
+  const [contentPage, setContentPage] = useState('1');
+  const [menuItems, setMenuItems] = useState(menuItemList);
+  const [videoDetails, setVideoDetails] = useState({});
+  const [menuLoading, setMenuLoading] = useState(false);
+  const router = useRouter();
+  const clientError = useClientError();
+
+  useEffect(() => {
+    setMenuLoading(true);
+    const isLoggedIn = localStorage.getItem('access_token');
+    if(!isLoggedIn) {
+      router.push('/login');
+    }
+    else {
+      getVideosHandler();
+    }
+  }, []);
+
+  const getVideosHandler = () => {
+    getVideos().then(response => {
+      if(response.status === 200) {
+        let menuData = [...menuItemList];
+        for(let video of response.data.attr) {
+          video['key'] = video.slug;
+          video['label'] = video.title;
+          video['icon'] = <VideoCameraOutlined />
+        }
+        menuData[0].children = response.data.attr;
+        setMenuLoading(false);
+        setVideoDetails(menuData[0].children[0]);
+        setMenuItems(menuData);
+      }
+      else {
+        message.error('Videolar getirilirken bir hata oluştu.');
+        setMenuLoading(false);
+      }
+    }).catch(error => {
+      clientError(error);
+      setMenuLoading(false);
+    })
+  }
+
   const onClick = (e) => {
+    if(e.key !== '1' || e.key !== '2') {
+      let foundVideoDetails = menuItems[0].children.find(item => item.key === e.key);
+      setVideoDetails(foundVideoDetails);
+      setContentPage('1');
+    }
     setContentPage(e.key);
   }
 
   return <Layout className={styles['layoutWrapper']}>
     <Layout.Sider width={330} className={styles['sideWrapper']}>
-      <Menu
+      {menuLoading ? <Spin/> : <Menu
         mode='inline'
         defaultSelectedKeys={['1']}
         items={menuItems}
         onClick={onClick}
-      />
+      />}
     </Layout.Sider>
     <Layout.Content className={styles['contentWrapper']}>
-      {contentPage === "1" ? <VideoPlayer/> : <UserList/>}
+      {contentPage === "2" ? <UserList/> : <VideoPlayer revokeHandler={getVideosHandler} videoDetails={videoDetails} user={user}/>}
     </Layout.Content>
   </Layout>
 }

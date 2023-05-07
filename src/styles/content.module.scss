@@ -7,6 +7,9 @@
 
   .contentWrapper {
     margin-left: .5rem;
+    .videoDescription {
+      margin-top: .5rem;
+    }
 
     .playerHeader {
       line-height: 1.5rem;
@@ -41,10 +44,13 @@
       }
     }
     .videoPlayerWrapper {
+      height: 500px;
       border-radius: $borderRadius;
       margin-top: 1rem;
       video {
         border-radius: $borderRadius;
+        height: 100%;
+        background-color: #000;
       }
     }
   }

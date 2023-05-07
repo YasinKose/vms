@@ -1,0 +1,6 @@
+@import './variables';
+
+.loadingWrapper {
+  @include flexBox(center, center, row, wrap);
+  height: 100%;
+}
