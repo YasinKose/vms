@@ -16,6 +16,10 @@ export const getVideos = async () => {
   return await axiosInstance.get('/videos');
 }
 
+export const getVideoDetails = async (slug) => {
+  return await axiosInstance.get(`/videos/${slug}`);
+}
+
 export const getVideoWatch = async (slug) => {
   return await axiosInstance.get(`/watch-video/${slug}`);
 }

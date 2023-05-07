@@ -49,37 +49,62 @@ const UserManagementModal = ({userDetails, revokeHandler}) => {
   }
 
   return <Form initialValues={userDetails} form={userForm} onFinish={submitFormHandler}>
-    <Form.Item label='İsim' name='name'>
-      <Input placeholder='İsim giriniz'/>
-    </Form.Item>
-    <Form.Item label='Soyisim' name='surname'>
-      <Input placeholder='Soyisim giriniz'/>
-    </Form.Item>
-    <Form.Item label='Email' name='email'>
-      <Input placeholder='Email giriniz'/>
-    </Form.Item>
-    <Form.Item label='Şifre' name='password'>
-      <Input placeholder='Şifre giriniz'/>
-    </Form.Item>
-    <Form.Item label='Rol' name='roles'>
-      <Select
-        allowClear
-        style={{
-          width: '100%',
-        }}
-        placeholder="Rol seçiniz"
-        options={[
-          {
-            label: 'Staff',
-            value: 'staff'
-          },
-          {
-            label: 'Müşteri',
-            value: 'customer'
-          }
-        ]}
-      />
-    </Form.Item>
+    <div>
+      <span>
+        İsim :
+      </span>
+      <Form.Item name='name'>
+        <Input placeholder='İsim giriniz'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
+        Soyisim :
+      </span>
+      <Form.Item name='surname'>
+        <Input placeholder='Soyisim giriniz'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
+        Email :
+      </span>
+      <Form.Item name='email'>
+        <Input placeholder='Email giriniz'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
+        Şifre :
+      </span>
+      <Form.Item name='password'>
+        <Input placeholder='Şifre giriniz'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
+        Rol :
+      </span>
+      <Form.Item name='roles'>
+        <Select
+          allowClear
+          style={{
+            width: '100%',
+          }}
+          placeholder="Rol seçiniz"
+          options={[
+            {
+              label: 'Staff',
+              value: 'staff'
+            },
+            {
+              label: 'Müşteri',
+              value: 'customer'
+            }
+          ]}
+        />
+      </Form.Item>
+    </div>
     <Form.Item label='Onaylı'>
       <Checkbox onChange={(element) => {
         userForm.setFieldValue('verified', element.target.checked);

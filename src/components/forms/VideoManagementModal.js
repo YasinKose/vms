@@ -7,6 +7,13 @@ const VideoManagementModal = ({videoDetails, revokeHandler, isEdit}) => {
   const [file, setFile] = useState();
   const [videoForm] = Form.useForm();
   const clientError = useClientError();
+  let initialValues;
+  if(isEdit) {
+    initialValues = videoDetails;
+  }
+  else {
+    initialValues = {};
+  }
 
   const reader = (parameterFile) => {
     setFile(parameterFile);
@@ -46,19 +53,39 @@ const VideoManagementModal = ({videoDetails, revokeHandler, isEdit}) => {
     }
   }
 
-  return <Form form={videoForm} initialValues={videoDetails} onFinish={submitVideoForm}>
-    <Form.Item label='Başlık' name='title'>
-      <Input placeholder='Video için başlık giriniz'/>
-    </Form.Item>
-    <Form.Item label='Açıklama' name='description'>
-      <Input placeholder='Video için açıklama giriniz'/>
-    </Form.Item>
-    <Form.Item label='Hafta' name='order'>
-      <InputNumber style={{width: '100%'}} placeholder='Video için hafta giriniz' min={1}/>
-    </Form.Item>
-    <Form.Item label='Video'>
-      <Input onChange={(e) => reader(e.target.files[0])} type="file"/>
-    </Form.Item>
+  return <Form form={videoForm} initialValues={initialValues} onFinish={submitVideoForm}>
+    <div>
+      <span>
+        Başlık :
+      </span>
+      <Form.Item name='title'>
+        <Input placeholder='Video için başlık giriniz'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
+        Açıklama :
+      </span>
+      <Form.Item name='description'>
+        <Input placeholder='Video için açıklama giriniz'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
+        Hafta :
+      </span>
+      <Form.Item name='order'>
+        <InputNumber style={{width: '100%'}} placeholder='Video için hafta giriniz' min={1}/>
+      </Form.Item>
+    </div>
+    {!isEdit && <div>
+      <span>
+        Video :
+      </span>
+      <Form.Item>
+        <Input onChange={(e) => reader(e.target.files[0])} type="file"/>
+      </Form.Item>
+    </div>}
     <Button type='primary' htmlType='submit'>
       {isEdit ? 'Güncelle' : 'Oluştur'}
     </Button>

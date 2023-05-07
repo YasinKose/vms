@@ -3,10 +3,11 @@ import styles from '../../styles/content.module.scss';
 import {EditOutlined, VideoCameraAddOutlined} from '@ant-design/icons';
 import ReactHlsPlayer from 'react-hls-player';
 import {useEffect, useRef, useState} from 'react';
-import {getVideoWatch} from './ContentManager';
+import {getVideoDetails, getVideoWatch} from './ContentManager';
 import {useClientError} from '../../hooks/useClientError';
 import Loading from '../../components/Loading';
 import VideoManagementModal from '../../components/forms/VideoManagementModal';
+import {useParams} from 'react-router-dom';
 
 const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
   if(Object.values(videoDetails).length === 0) {
@@ -17,18 +18,35 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
   const [loadingVideo, setLoadingVideo] = useState(true);
   const [addVideoModal, setAddVideoModal] = useState(false);
   const [videoEdit, setVideoEdit] = useState(false);
+  const [selectedVideoDetails, setSelectedVideoDetails] = useState(videoDetails);
 
   const clientError = useClientError();
   const playerRef = useRef();
 
-  useEffect(() => {
-    getVideWatchDetails();
-  }, [videoDetails])
+  const param = useParams();
+  console.log(param);
 
-  const getVideWatchDetails = () => {
-    console.log(videoDetails)
+  useEffect(() => {
+    getVideoWatchDetails();
+  }, [videoDetails, param.slug])
+
+  const getVideoWatchDetails = () => {
     setLoadingVideo(true);
-    getVideoWatch(videoDetails.slug).then(response => {
+    let videoSlug = param.slug ? param.slug : videoDetails.slug;
+    getVideoDetails(videoSlug).then(response => {
+      if(response.status === 200) {
+        setSelectedVideoDetails(response.data.attr);
+        setLoadingVideo(false);
+      }
+      else {
+        message.error('Video hazırlanamadı.')
+        setLoadingVideo(false);
+      }
+    }).catch(error => {
+      clientError(error);
+      setLoadingVideo(false);
+    })
+    getVideoWatch(videoSlug).then(response => {
       if(response.status === 200) {
         setVideoWatch(response.data.attr);
         setLoadingVideo(false);
@@ -45,7 +63,7 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
 
   const videoMaker = () => {
     if(videoWatch.watched_video.hls_url === null) {
-      getVideWatchDetails();
+      getVideoWatchDetails();
     }
     else {
       return <ReactHlsPlayer
@@ -64,21 +82,10 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
       <div>
         <span className={styles['playerHeaderBlock']}>&nbsp;</span>
         <strong>
-          {videoDetails.title}
+          {selectedVideoDetails.title}
         </strong>
       </div>
       <div className={styles['playerInformation']}>
-        {/*
-          <div className={styles['playerParticipants']}>
-          <UserOutlined/>
-          <span>
-                Joined Classmates
-              </span>
-          <span className={styles['participant']}>
-                34
-              </span>
-        </div>
-        */}
         {user?.is_admin && <Button onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>}
         {user?.is_admin && <Button onClick={() => {
           setAddVideoModal(true);
@@ -88,7 +95,7 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
     </Col>
     <Col span={24}>
       <p className={styles['videoDescription']}>
-        {videoDetails.description}
+        {selectedVideoDetails.description}
       </p>
     </Col>
     <Col span={24} className={styles['videoPlayerWrapper']}>
@@ -97,14 +104,17 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
     <Modal
       destroyOnClose={true}
       width={600}
-      title='Video Ekle'
+      title={videoEdit ? 'Video Düzenle' : 'Video Ekle'}
       open={addVideoModal}
-      onCancel={() => setAddVideoModal(false)}
+      onCancel={() => {
+        setAddVideoModal(false);
+        setVideoEdit(false);
+      }}
       footer={false}>
       <VideoManagementModal revokeHandler={() => {
         setAddVideoModal(false);
         revokeHandler();
-      }} isEdit={videoEdit} videoDetails={videoDetails}/>
+      }} isEdit={videoEdit} videoDetails={selectedVideoDetails}/>
     </Modal>
   </Row>
 }

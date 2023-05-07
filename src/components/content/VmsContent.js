@@ -6,7 +6,7 @@ import VideoPlayer from './VideoPlayer';
 import UserList from './UserList';
 import {getVideos} from './ContentManager';
 import {useClientError} from '../../hooks/useClientError';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 const VmsContent = ({user}) => {
   if(!user || Object.values(user).length === 0) {
@@ -26,10 +26,7 @@ const VmsContent = ({user}) => {
       key: 2
     }
   ]
-
-  const [contentPage, setContentPage] = useState('1');
   const [menuItems, setMenuItems] = useState(menuItemList);
-  const [videoDetails, setVideoDetails] = useState({});
   const [menuLoading, setMenuLoading] = useState(false);
   const navigate = useNavigate();
   const clientError = useClientError();
@@ -56,7 +53,6 @@ const VmsContent = ({user}) => {
         }
         menuData[0].children = response.data.attr;
         setMenuLoading(false);
-        setVideoDetails(menuData[0].children[0]);
         setMenuItems(menuData);
       }
       else {
@@ -70,25 +66,25 @@ const VmsContent = ({user}) => {
   }
 
   const onClick = (e) => {
-    if(e.key !== '1' || e.key !== '2') {
-      let foundVideoDetails = menuItems[0].children.find(item => item.key === e.key);
-      setVideoDetails(foundVideoDetails);
-      setContentPage('1');
+    if(e.key !== '2') {
+      navigate(`/watch/${e.key}`);
     }
-    setContentPage(e.key);
+    if(e.key === '2') {
+      navigate('/user-list')
+    }
   }
 
   return <Layout className={styles['layoutWrapper']}>
     <Layout.Sider width={330} className={styles['sideWrapper']}>
       {menuLoading ? <Spin/> : <Menu
         mode='inline'
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={window.location.pathname === '/user-list' ? '2' : '1'}
         items={menuItems}
         onClick={onClick}
       />}
     </Layout.Sider>
     <Layout.Content className={styles['contentWrapper']}>
-      {contentPage === "2" ? <UserList/> : <VideoPlayer revokeHandler={getVideosHandler} videoDetails={videoDetails} user={user}/>}
+      {window.location.pathname === '/user-list' ? <UserList/> : <VideoPlayer revokeHandler={getVideosHandler} videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}
     </Layout.Content>
   </Layout>
 }
