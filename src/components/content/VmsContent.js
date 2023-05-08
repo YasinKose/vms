@@ -75,7 +75,7 @@ const VmsContent = ({user}) => {
   }
 
   return <Layout className={styles['layoutWrapper']}>
-    <Layout.Sider width={330} className={styles['sideWrapper']}>
+    <Layout.Sider collapsible={true} width={330} className={styles['sideWrapper']}>
       {menuLoading ? <Spin/> : <Menu
         mode='inline'
         defaultSelectedKeys={window.location.pathname === '/user-list' ? '2' : '1'}

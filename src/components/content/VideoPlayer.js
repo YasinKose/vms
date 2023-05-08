@@ -86,11 +86,20 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
         </strong>
       </div>
       <div className={styles['playerInformation']}>
-        {user?.is_admin && <Button onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>}
-        {user?.is_admin && <Button onClick={() => {
-          setAddVideoModal(true);
-          setVideoEdit(true);
-        }} type='dashed' icon={<EditOutlined />}>Video Düzenle</Button>}
+        {user?.is_admin && <>
+          <Button className={styles['webButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>
+          <Button className={styles['mobileButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}/>
+        </>}
+        {user?.is_admin && <>
+          <Button className={styles['webButton']} onClick={() => {
+            setAddVideoModal(true);
+            setVideoEdit(true);
+          }} type='dashed' icon={<EditOutlined />}>Video Düzenle</Button>
+          <Button className={styles['mobileButton']} onClick={() => {
+            setAddVideoModal(true);
+            setVideoEdit(true);
+          }} type='dashed' icon={<EditOutlined />}/>
+        </>}
       </div>
     </Col>
     <Col span={24}>

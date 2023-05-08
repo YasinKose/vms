@@ -36,3 +36,27 @@ a {
 .ant-layout-header {
   background: #fff !important;
 }
+
+.ant-layout-sider-trigger {
+  position: absolute !important;
+  left: 0;
+  background: #1777ff !important;
+}
+
+.ant-layout-sider-collapsed {
+  padding: 1rem 0 !important;
+}
+
+.ant-menu-inline-collapsed {
+  border-inline-end: none !important;
+}
+
+.ant-table-content {
+  overflow: auto;
+}
+
+@media only screen and (max-width: 750px) {
+  body {
+    padding: 0;
+  }
+}

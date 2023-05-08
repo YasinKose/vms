@@ -27,6 +27,9 @@
       .playerInformation {
         @include flexBox(center, space-between, row, wrap);
         line-height: 1.5rem;
+        .mobileButton {
+          display: none;
+        }
 
         .playerParticipants {
           width: 180px;
@@ -60,4 +63,23 @@
   padding: 1rem 2rem;
   background: $white !important;
   border-radius: $borderRadius;
+}
+
+@media only screen and (max-width: 750px) {
+  .playerInformation {
+    .mobileButton {
+      display: inline-block !important;
+    }
+    .webButton {
+      display: none;
+    }
+  }
+  .sideWrapper, .contentWrapper {
+    padding: 1rem !important;
+  }
+  .contentWrapper {
+    .videoPlayerWrapper {
+      height: 350px !important;
+    }
+  }
 }

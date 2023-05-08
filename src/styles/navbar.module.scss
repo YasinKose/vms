@@ -16,6 +16,10 @@
   padding: 0 24px 0 24px;
   display: flex;
   border-radius: $borderRadius;
+  justify-content: space-between;
+  .navLogoAndSearch {
+    display: flex;
+  }
 }
 
 .logo {
@@ -35,9 +39,12 @@
 }
 
 .navbarMenu {
-  width: calc(100% - 60px);
+  width: 160px;
   display: flex;
   justify-content: space-between;
+  li {
+    background-color: #fff;
+  }
 }
 
 .navbarMenu .ant-layout-header {
@@ -96,11 +103,6 @@
   .menuButton {
     display: block;
     margin-right: 10px;
-  }
-
-  .leftMenu,
-  .rightMenu {
-    display: none;
   }
 
   .logo a {
