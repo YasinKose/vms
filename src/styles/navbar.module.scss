@@ -23,6 +23,7 @@
 }
 
 .logo {
+  display: flex;
   align-items: center;
   width: 60px;
   margin-right: 2rem;
@@ -115,6 +116,12 @@
 
   .username {
     display: inline-block;
+  }
+}
+
+@media (max-width: 600px) {
+  .leftMenu {
+    display: none;
   }
 }
 

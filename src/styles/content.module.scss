@@ -83,3 +83,19 @@
     }
   }
 }
+
+@media (min-width: 600px) {
+  .sideWrapper {
+    .searchWrapper {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .ant-layout-sider-collapsed {
+    .searchWrapper {
+      display: none;
+    }
+  }
+}

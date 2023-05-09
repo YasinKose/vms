@@ -24,7 +24,6 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
   const playerRef = useRef();
 
   const param = useParams();
-  console.log(param);
 
   useEffect(() => {
     getVideoWatchDetails();

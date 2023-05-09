@@ -1,21 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Layout, Button, Drawer, Input} from 'antd';
+import {Layout, Button, Drawer, Input, Select} from 'antd';
 import RightMenu from './RightMenu';
-import {MenuOutlined} from '@ant-design/icons';
 import styles from '../../styles/navbar.module.scss';
 import logo from '../../assets/images/logo.jpeg';
 
-const Navbar = ({user}) => {
-  const [visible, setVisible] = useState(false);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const showDrawer = () => {
-    setVisible(!visible);
-  };
-  const {Search} = Input;
-
-  const onSearchHandler = (e) => {
-    console.log(e)
-  }
+const Navbar = ({user, searchCallback, videoList}) => {
 
   return (
     <nav className={styles['navbar']}>
@@ -30,7 +19,16 @@ const Navbar = ({user}) => {
             </div>
             <div className={styles['leftMenu']}>
               {/* <LeftMenu mode={'horizontal'}/> */}
-              <Search placeholder='Arama yapın...' onSearch={(e) => onSearchHandler(e)} loading={searchLoading} enterButton/>
+              <Select
+                showSearch
+                style={{
+                  width: 200,
+                }}
+                placeholder='Video arayın'
+                optionFilterProp='children'
+                onChange={(e) => searchCallback(e)}
+                filterOption={(input, option) => (option?.label.toLocaleLowerCase() ?? '').includes(input.toLocaleLowerCase())}
+                options={videoList}/>
             </div>
           </div>
           <div className={styles['navbarMenu']}>

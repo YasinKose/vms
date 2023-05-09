@@ -1,14 +1,14 @@
-import {message, Layout, Menu, Spin,} from 'antd';
+import {message, Layout, Menu, Spin, Input, Select,} from 'antd';
 import styles from '../../styles/content.module.scss';
 import {HomeOutlined, UserSwitchOutlined, VideoCameraOutlined} from '@ant-design/icons';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import VideoPlayer from './VideoPlayer';
 import UserList from './UserList';
 import {getVideos} from './ContentManager';
 import {useClientError} from '../../hooks/useClientError';
 import {useNavigate, useParams} from 'react-router-dom';
 
-const VmsContent = ({user}) => {
+const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
   if(!user || Object.values(user).length === 0) {
     return <Spin/>
   }
@@ -42,6 +42,12 @@ const VmsContent = ({user}) => {
     }
   }, []);
 
+  useEffect(() => {
+    if(selectedVideoFromSelector.length > 0) {
+      navigate(`/watch/${selectedVideoFromSelector}`)
+    }
+  }, [selectedVideoFromSelector])
+
   const getVideosHandler = () => {
     getVideos().then(response => {
       if(response.status === 200) {
@@ -49,9 +55,11 @@ const VmsContent = ({user}) => {
         for(let video of response.data.attr) {
           video['key'] = video.slug;
           video['label'] = video.title;
+          video['value'] = video.slug;
           video['icon'] = <VideoCameraOutlined />
         }
         menuData[0].children = response.data.attr;
+        videoListCallback(response.data.attr);
         setMenuLoading(false);
         setMenuItems(menuData);
       }
@@ -74,14 +82,32 @@ const VmsContent = ({user}) => {
     }
   }
 
+  const selectHandler = (selectedSlug) => {
+    navigate(`/watch/${selectedSlug}`)
+  }
+
   return <Layout className={styles['layoutWrapper']}>
-    <Layout.Sider collapsible={true} width={330} className={styles['sideWrapper']}>
-      {menuLoading ? <Spin/> : <Menu
-        mode='inline'
-        defaultSelectedKeys={window.location.pathname === '/user-list' ? '2' : '1'}
-        items={menuItems}
-        onClick={onClick}
-      />}
+    <Layout.Sider breakpoint="md" collapsible={true} width={330} className={styles['sideWrapper']}>
+      {menuLoading ? <Spin/> : <>
+        <div className={styles['searchWrapper']}>
+          <Select
+            showSearch
+            style={{
+              width: '100%',
+            }}
+            placeholder='Video arayın'
+            optionFilterProp='children'
+            onChange={(e) => selectHandler(e)}
+            filterOption={(input, option) => (option?.label.toLocaleLowerCase() ?? '').includes(input.toLocaleLowerCase())}
+            options={menuItems[0]?.children}/>
+        </div>
+        <Menu
+          mode='inline'
+          defaultSelectedKeys={window.location.pathname === '/user-list' ? '2' : '1'}
+          items={menuItems}
+          onClick={onClick}
+        />
+      </>}
     </Layout.Sider>
     <Layout.Content className={styles['contentWrapper']}>
       {window.location.pathname === '/user-list' ? <UserList/> : <VideoPlayer revokeHandler={getVideosHandler} videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}

@@ -58,7 +58,7 @@ const UserList = () => {
   ];
 
   const deleteMethodHandler = () => {
-    console.log(userDetails)
+    //console.log(userDetails)
   }
 
   const getUserHandler = () => {

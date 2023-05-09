@@ -64,4 +64,7 @@ a {
   body {
     padding: 1rem;
   }
+  .ant-layout-sider-collapsed .ant-select {
+    display: none;
+  }
 }
