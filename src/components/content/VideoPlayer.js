@@ -81,18 +81,14 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
       getVideoWatchDetails();
     }
     else {
-      return <div className={styles['videoControls']}>
-        {selectedVideoDetails?.previous_video && <LeftCircleOutlined onClick={() => skipVideo('previous')} className={styles['previousButton']}/>}
-        {selectedVideoDetails?.next_video && <RightCircleOutlined onClick={() => skipVideo('next')} className={styles['nextButton']}/>}
-        <ReactHlsPlayer
-          playerRef={playerRef}
-          src={videoWatch.watched_video.hls_url}
-          autoPlay={false}
-          controls={true}
-          width='100%'
-          height='auto'
-        />
-      </div>
+      return <ReactHlsPlayer
+        playerRef={playerRef}
+        src={videoWatch.watched_video.hls_url}
+        autoPlay={false}
+        controls={true}
+        width='100%'
+        height='auto'
+      />
     }
   }
 
@@ -129,6 +125,18 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
     <Col span={24} className={styles['videoPlayerWrapper']}>
       {Object.values(videoWatch).length === 0 || loadingVideo ? <Loading/> : videoMaker() }
     </Col>
+    <div className={styles['buttonWrapper']}>
+      <div>
+        {selectedVideoDetails?.previous_video && <Button type='primary' onClick={() => skipVideo('previous')} icon={<LeftCircleOutlined/>}>
+          {selectedVideoDetails?.previous_video?.title}
+        </Button>}
+      </div>
+      <div>
+        {selectedVideoDetails?.next_video && <Button type='primary' onClick={() => skipVideo('next')} icon={<RightCircleOutlined/>}>
+          {selectedVideoDetails?.next_video?.title}
+        </Button>}
+      </div>
+    </div>
     <Modal
       destroyOnClose={true}
       width={600}

@@ -19,36 +19,16 @@
       margin-top: .5rem;
     }
     .videoPlayerWrapper {
-      .videoControls {
+      height: 100%;
+      video {
         height: 100%;
-        position: relative;
-        * {
-          height: 100%;
-        }
-        span, svg, path {
-          height: 3rem;
-        }
-        .previousButton, .nextButton {
-          position: absolute;
-          z-index: 9;
-          top: 50%;
-          color: #fff;
-          cursor: pointer;
-          font-size: 3rem;
-          transition: .25s;
-          &:hover {
-            filter: drop-shadow(0 0 5px #fff);
-          }
-        }
-        .nextButton {
-          right: 0;
-          transform: translate(-10px, -50%);
-        }
-        .previousButton {
-          left: 0;
-          transform: translate(10px, -50%);
-        }
       }
+    }
+
+    .buttonWrapper {
+      width: 100%;
+      margin: .5rem 0;
+      @include flexBox(center, space-between, row, wrap);
     }
 
     .playerHeader {
