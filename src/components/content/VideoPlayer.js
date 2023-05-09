@@ -131,7 +131,7 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
           {selectedVideoDetails?.previous_video?.title}
         </Button>}
       </div>
-      <div>
+      <div className={styles['nextWrapper']}>
         {selectedVideoDetails?.next_video && <Button type='primary' onClick={() => skipVideo('next')} icon={<RightCircleOutlined/>}>
           {selectedVideoDetails?.next_video?.title}
         </Button>}

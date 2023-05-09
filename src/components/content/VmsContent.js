@@ -28,11 +28,15 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
   ]
   const [menuItems, setMenuItems] = useState(menuItemList);
   const [menuLoading, setMenuLoading] = useState(false);
+  const [openKey, setOpenKey] = useState(['1']);
   const navigate = useNavigate();
   const clientError = useClientError();
   const param = useParams();
 
   useEffect(() => {
+    if(screen.width < 750) {
+      setOpenKey([]);
+    }
     setMenuLoading(true);
     const isLoggedIn = localStorage.getItem('access_token');
     if(!isLoggedIn) {
@@ -105,7 +109,7 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
         <Menu
           mode='inline'
           selectedKeys={window.location.pathname === '/user-list' ? '2' : ['1', param.slug ? param.slug : menuItems[0].children ? menuItems[0].children[0].slug : null]}
-          defaultOpenKeys={['1']}
+          defaultOpenKeys={openKey}
           items={menuItems}
           onClick={onClick}
         />
