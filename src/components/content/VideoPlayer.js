@@ -1,13 +1,19 @@
 import {Button, Col, Row, message, Modal} from 'antd';
 import styles from '../../styles/content.module.scss';
-import {EditOutlined, VideoCameraAddOutlined} from '@ant-design/icons';
+import {
+  EditOutlined,
+  LeftCircleOutlined,
+  RightCircleFilled,
+  RightCircleOutlined,
+  VideoCameraAddOutlined
+} from '@ant-design/icons';
 import ReactHlsPlayer from 'react-hls-player';
 import {useEffect, useRef, useState} from 'react';
 import {getVideoDetails, getVideoWatch} from './ContentManager';
 import {useClientError} from '../../hooks/useClientError';
 import Loading from '../../components/Loading';
 import VideoManagementModal from '../../components/forms/VideoManagementModal';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
   if(Object.values(videoDetails).length === 0) {
@@ -22,7 +28,7 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
 
   const clientError = useClientError();
   const playerRef = useRef();
-
+  const navigate = useNavigate();
   const param = useParams();
 
   useEffect(() => {
@@ -60,19 +66,32 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
     })
   }
 
+  const skipVideo = (to) => {
+    if(to === 'next') {
+      navigate(`/watch/${selectedVideoDetails?.next_video?.slug}`);
+    }
+    else {
+      navigate(`/watch/${selectedVideoDetails?.previous_video?.slug}`);
+    }
+  }
+
   const videoMaker = () => {
     if(videoWatch.watched_video.hls_url === null) {
       getVideoWatchDetails();
     }
     else {
-      return <ReactHlsPlayer
-        playerRef={playerRef}
-        src={videoWatch.watched_video.hls_url}
-        autoPlay={false}
-        controls={true}
-        width='100%'
-        height='auto'
-      />
+      return <div className={styles['videoControls']}>
+        {selectedVideoDetails?.previous_video && <LeftCircleOutlined onClick={() => skipVideo('previous')} className={styles['previousButton']}/>}
+        {selectedVideoDetails?.next_video && <RightCircleOutlined onClick={() => skipVideo('next')} className={styles['nextButton']}/>}
+        <ReactHlsPlayer
+          playerRef={playerRef}
+          src={videoWatch.watched_video.hls_url}
+          autoPlay={false}
+          controls={true}
+          width='100%'
+          height='auto'
+        />
+      </div>
     }
   }
 

@@ -30,6 +30,7 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
   const [menuLoading, setMenuLoading] = useState(false);
   const navigate = useNavigate();
   const clientError = useClientError();
+  const param = useParams();
 
   useEffect(() => {
     setMenuLoading(true);
@@ -103,7 +104,8 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
         </div>
         <Menu
           mode='inline'
-          defaultSelectedKeys={window.location.pathname === '/user-list' ? '2' : '1'}
+          defaultSelectedKeys={window.location.pathname === '/user-list' ? '2' : ['1', param.slug ? param.slug : menuItems[0].children ? menuItems[0].children[0].slug : null]}
+          defaultOpenKeys={['1']}
           items={menuItems}
           onClick={onClick}
         />

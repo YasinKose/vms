@@ -21,11 +21,11 @@ const VideoManagementModal = ({videoDetails, revokeHandler, isEdit}) => {
 
   const submitVideoForm = (formValues) => {
     let formData = new FormData();
-    formData.append('title', formValues.title)
-    formData.append('description', formValues.description)
-    formData.append('order', formValues.order)
-    formData.append('video', file)
+    formData.append('title', formValues.title);
+    formData.append('description', formValues.description);
+    formData.append('order', formValues.order);
     if(!isEdit) {
+      formData.append('video', file);
       createVideo(formData).then(response => {
         if(response.status === 200) {
           message.success(response.data.message);
@@ -39,7 +39,7 @@ const VideoManagementModal = ({videoDetails, revokeHandler, isEdit}) => {
       })
     }
     else {
-      updateVideo(videoDetails.slug, formData).then(response => {
+      updateVideo(videoDetails.slug, formValues).then(response => {
         if(response.status === 200) {
           message.success(response.data.message);
           revokeHandler();
@@ -56,34 +56,34 @@ const VideoManagementModal = ({videoDetails, revokeHandler, isEdit}) => {
   return <Form form={videoForm} initialValues={initialValues} onFinish={submitVideoForm}>
     <div>
       <span>
-        Başlık :
+        <span className='required'>*</span> Başlık :
       </span>
-      <Form.Item name='title'>
+      <Form.Item rules={[{required: true, message: 'Bu alan boş bırakılamaz.'}]} name='title'>
         <Input placeholder='Video için başlık giriniz'/>
       </Form.Item>
     </div>
     <div>
       <span>
-        Açıklama :
+        <span className='required'>*</span> Açıklama :
       </span>
-      <Form.Item name='description'>
+      <Form.Item rules={[{required: true, message: 'Bu alan boş bırakılamaz.'}]} name='description'>
         <Input placeholder='Video için açıklama giriniz'/>
       </Form.Item>
     </div>
     <div>
       <span>
-        Hafta :
+        <span className='required'>*</span> Hafta :
       </span>
-      <Form.Item name='order'>
+      <Form.Item rules={[{required: true, message: 'Bu alan boş bırakılamaz.'}]} name='order'>
         <InputNumber style={{width: '100%'}} placeholder='Video için hafta giriniz' min={1}/>
       </Form.Item>
     </div>
     {!isEdit && <div>
       <span>
-        Video :
+        <span className='required'>*</span> Video :
       </span>
       <Form.Item>
-        <Input onChange={(e) => reader(e.target.files[0])} type="file"/>
+        <Input rules={[{required: true, message: 'Bu alan boş bırakılamaz.'}]} onChange={(e) => reader(e.target.files[0])} type="file"/>
       </Form.Item>
     </div>}
     <Button type='primary' htmlType='submit'>

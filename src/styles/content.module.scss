@@ -3,12 +3,46 @@
 .layoutWrapper {
   .sideWrapper {
     margin-right: .5rem;
+    ul {
+      li {
+        &:first-child {
+          max-height: 440px;
+          overflow: auto;
+        }
+      }
+    }
   }
 
   .contentWrapper {
     margin-left: .5rem;
     .videoDescription {
       margin-top: .5rem;
+    }
+    .videoPlayerWrapper {
+      .videoControls {
+        height: 100%;
+        position: relative;
+        .previousButton, .nextButton {
+          position: absolute;
+          z-index: 9;
+          top: 50%;
+          color: #fff;
+          cursor: pointer;
+          font-size: 3rem;
+          transition: .25s;
+          &:hover {
+            filter: drop-shadow(0 0 5px #fff);
+          }
+        }
+        .nextButton {
+          right: 0;
+          transform: translate(-10px, -50%);
+        }
+        .previousButton {
+          left: 0;
+          transform: translate(10px, -50%);
+        }
+      }
     }
 
     .playerHeader {
@@ -80,6 +114,15 @@
   .contentWrapper {
     .videoPlayerWrapper {
       height: 350px !important;
+    }
+  }
+  .sideWrapper {
+    ul {
+      li {
+        &:first-child {
+          max-height: 400px !important;
+        }
+      }
     }
   }
 }

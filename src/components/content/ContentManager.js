@@ -29,5 +29,5 @@ export const createVideo = async (formValues) => {
 }
 
 export const updateVideo = async (slug, formValues) => {
-  return await axiosInstanceFileUpload.put(`/videos/${slug}`, formValues)
+  return await axiosInstance.put(`/videos/${slug}`, formValues)
 }

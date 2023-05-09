@@ -60,6 +60,10 @@ a {
   border-bottom-right-radius: 12px;
 }
 
+.required {
+  color: #ca1313;
+}
+
 @media only screen and (max-width: 750px) {
   body {
     padding: 1rem;
