@@ -15,10 +15,6 @@ import Loading from '../../components/Loading';
 import VideoManagementModal from '../../components/forms/VideoManagementModal';
 import {useNavigate, useParams} from 'react-router-dom';
 
-import 'vidstack/styles/defaults.css';
-
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
-
 
 const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => {
   if(Object.values(videoDetails).length === 0) {
@@ -88,13 +84,14 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
       return <div className={styles['videoControls']}>
         {selectedVideoDetails?.previous_video && <LeftCircleOutlined onClick={() => skipVideo('previous')} className={styles['previousButton']}/>}
         {selectedVideoDetails?.next_video && <RightCircleOutlined onClick={() => skipVideo('next')} className={styles['nextButton']}/>}
-        <MediaPlayer
+        <ReactHlsPlayer
+          playerRef={playerRef}
           src={videoWatch.watched_video.hls_url}
-          controls
-        >
-          {/* ^ remove `controls` attribute if you're designing a custom UI */}
-          <MediaOutlet />
-        </MediaPlayer>
+          autoPlay={false}
+          controls={true}
+          width='100%'
+          height='auto'
+        />
       </div>
     }
   }

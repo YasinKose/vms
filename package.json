@@ -8,7 +8,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@videojs/http-streaming": "^2.16.2",
-    "@vidstack/react": "^0.4.5",
     "antd": "^5.4.6",
     "axios": "^1.4.0",
     "react": "^18.2.0",
