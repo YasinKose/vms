@@ -15,7 +15,12 @@ import Loading from '../../components/Loading';
 import VideoManagementModal from '../../components/forms/VideoManagementModal';
 import {useNavigate, useParams} from 'react-router-dom';
 
-const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
+import 'vidstack/styles/defaults.css';
+
+import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+
+
+const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => {
   if(Object.values(videoDetails).length === 0) {
     return <Loading/>
   }
@@ -68,10 +73,10 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
 
   const skipVideo = (to) => {
     if(to === 'next') {
-      navigate(`/watch/${selectedVideoDetails?.next_video?.slug}`);
+      revokeVideoChange(selectedVideoDetails?.next_video?.slug);
     }
     else {
-      navigate(`/watch/${selectedVideoDetails?.previous_video?.slug}`);
+      revokeVideoChange(selectedVideoDetails?.previous_video?.slug);
     }
   }
 
@@ -83,14 +88,13 @@ const VideoPlayer = ({user, videoDetails, revokeHandler}) => {
       return <div className={styles['videoControls']}>
         {selectedVideoDetails?.previous_video && <LeftCircleOutlined onClick={() => skipVideo('previous')} className={styles['previousButton']}/>}
         {selectedVideoDetails?.next_video && <RightCircleOutlined onClick={() => skipVideo('next')} className={styles['nextButton']}/>}
-        <ReactHlsPlayer
-          playerRef={playerRef}
+        <MediaPlayer
           src={videoWatch.watched_video.hls_url}
-          autoPlay={false}
-          controls={true}
-          width='100%'
-          height='auto'
-        />
+          controls
+        >
+          {/* ^ remove `controls` attribute if you're designing a custom UI */}
+          <MediaOutlet />
+        </MediaPlayer>
       </div>
     }
   }

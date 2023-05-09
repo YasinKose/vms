@@ -84,7 +84,7 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
   }
 
   const selectHandler = (selectedSlug) => {
-    navigate(`/watch/${selectedSlug}`)
+    navigate(`/watch/${selectedSlug}`);
   }
 
   return <Layout className={styles['layoutWrapper']}>
@@ -104,7 +104,7 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
         </div>
         <Menu
           mode='inline'
-          defaultSelectedKeys={window.location.pathname === '/user-list' ? '2' : ['1', param.slug ? param.slug : menuItems[0].children ? menuItems[0].children[0].slug : null]}
+          selectedKeys={window.location.pathname === '/user-list' ? '2' : ['1', param.slug ? param.slug : menuItems[0].children ? menuItems[0].children[0].slug : null]}
           defaultOpenKeys={['1']}
           items={menuItems}
           onClick={onClick}
@@ -112,7 +112,7 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
       </>}
     </Layout.Sider>
     <Layout.Content className={styles['contentWrapper']}>
-      {window.location.pathname === '/user-list' ? <UserList/> : <VideoPlayer revokeHandler={getVideosHandler} videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}
+      {window.location.pathname === '/user-list' ? <UserList/> : <VideoPlayer revokeVideoChange={selectHandler} revokeHandler={getVideosHandler} videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}
     </Layout.Content>
   </Layout>
 }
