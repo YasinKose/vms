@@ -2,11 +2,10 @@ import {notification} from 'antd';
 
 export function useClientError() {
   const onClientError = (error) => {
-    const {status, data} = error?.response;
 
     if (!error?.response) {
       return notification.error({
-        message: error.response.data.message,
+        message: error.response?.data?.message,
         description: 'Bir hata oluştu',
       });
     }
@@ -27,10 +26,10 @@ export function useClientError() {
       return combinedValues;
     }
 
-    if (status === 404) {
+    if (error.response?.status === 404) {
       return history.replace('/404');
     } else {
-      let dataErrors = combineValuesWithCommas(data.errors)
+      let dataErrors = combineValuesWithCommas(error.response?.data.errors)
       return notification.error({
         message: error.response.data.message,
         description: error?.response?.data?.errors ? <div

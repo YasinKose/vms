@@ -8,6 +8,7 @@ import {Link, useNavigate} from 'react-router-dom';
 
 const LoginForm = () => {
   const [resetPassword, setResetPassword] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const [loginForm] = Form.useForm();
   const [resetPasswordForm] = Form.useForm();
   const navigate = useNavigate();
@@ -33,21 +34,26 @@ const LoginForm = () => {
   }
 
   const loginFormHandler = (formValues) => {
+    setLoginLoading(true);
     const isEmpty = Object.values(formValues).every(x => x === null || x === '');
     if (!isEmpty) {
       loginHandler(formValues).then(response => {
         if (response.status === 200) {
           localStorage.setItem('access_token', response.data.attr.access_token);
           navigate('/');
+          setLoginLoading(false);
           return message.success(response.data.message);
         } else {
+          setLoginLoading(false);
           return message.error(response.data.message);
         }
       }).catch(error => {
         clientError(error);
+        setLoginLoading(false);
       })
     } else {
-      return message.error('Giriş yapmak için lütfen alanları doldurunuz.')
+      setLoginLoading(false);
+      return message.error('Giriş yapmak için lütfen alanları doldurunuz.');
     }
   }
 
@@ -63,7 +69,7 @@ const LoginForm = () => {
       <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='password'>
         <Input type='password' placeholder='Şifre'/>
       </Form.Item>
-      <Button type='primary' htmlType='submit'>
+      <Button loading={loginLoading} type='primary' htmlType='submit'>
         Giriş Yap
       </Button>
       <div className={styles['actionWrapper']}>

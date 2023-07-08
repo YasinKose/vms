@@ -48,6 +48,12 @@ const LoginForm = () => {
       <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='email'>
         <Input placeholder='Email'/>
       </Form.Item>
+      <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='twitter'>
+        <Input placeholder='Twitter'/>
+      </Form.Item>
+      <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='discord'>
+        <Input placeholder='Discord'/>
+      </Form.Item>
       <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='password'>
         <Input type='password' placeholder='Şifre'/>
       </Form.Item>

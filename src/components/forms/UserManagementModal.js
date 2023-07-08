@@ -83,6 +83,22 @@ const UserManagementModal = ({userDetails, revokeHandler}) => {
     </div>
     <div>
       <span>
+        Twitter :
+      </span>
+      <Form.Item name='twitter'>
+        <Input placeholder='Twitter'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
+        Discord :
+      </span>
+      <Form.Item name='discord'>
+        <Input placeholder='Discord'/>
+      </Form.Item>
+    </div>
+    <div>
+      <span>
         Rol :
       </span>
       <Form.Item name='roles'>
