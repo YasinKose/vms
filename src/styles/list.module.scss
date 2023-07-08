@@ -2,6 +2,7 @@
 
 .tableActions {
   @include flexBox(center, space-between, row, wrap);
+  width: 120px;
   .deleteButton {
     cursor: pointer;
     background-color: $softRed;
@@ -11,6 +12,24 @@
     transition: .25s;
     &:hover {
       background-color: $midRed;
+    }
+  }
+  .disabledButton {
+    background-color: $softGray;
+    color: $deepGray;
+    padding: .35rem;
+    border-radius: $fullRadius;
+    transition: .25s;
+  }
+  .approveButton {
+    cursor: pointer;
+    background-color: $softGreen;
+    color: $deepGreen;
+    padding: .35rem;
+    border-radius: $fullRadius;
+    transition: .25s;
+    &:hover {
+      background-color: $midGreen;
     }
   }
   .editButton {

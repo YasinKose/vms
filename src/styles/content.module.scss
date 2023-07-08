@@ -138,6 +138,22 @@
   }
 }
 
+.txtWrapper {
+  .txtCol {
+    margin: 1rem auto 0 auto;
+    h1, p {
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.txtFormWrapper {
+  margin: 0 auto 1rem auto;
+}
+
 @media (min-width: 600px) {
   .sideWrapper {
     .searchWrapper {

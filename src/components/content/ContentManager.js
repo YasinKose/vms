@@ -12,6 +12,14 @@ export const updateUser = async (uuid, formValues) => {
   return await axiosInstance.put(`/users/${uuid}`, formValues);
 }
 
+export const deleteUser = async (uuid) => {
+  return await axiosInstance.delete(`/users/${uuid}`);
+}
+
+export const restoreUser = async (uuid) => {
+  return await axiosInstance.get(`/users/${uuid}/restore`);
+}
+
 export const getVideos = async () => {
   return await axiosInstance.get('/videos');
 }
@@ -25,9 +33,13 @@ export const getVideoWatch = async (slug) => {
 }
 
 export const createVideo = async (formValues) => {
-  return await axiosInstanceFileUpload.post('/videos', formValues)
+  return await axiosInstanceFileUpload.post('/videos', formValues);
 }
 
 export const updateVideo = async (slug, formValues) => {
-  return await axiosInstance.put(`/videos/${slug}`, formValues)
+  return await axiosInstance.put(`/videos/${slug}`, formValues);
+}
+
+export const postTxt = async (formValues) => {
+  return await axiosInstance.post('/auth/add-txt', formValues);
 }

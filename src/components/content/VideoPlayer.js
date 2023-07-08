@@ -1,4 +1,4 @@
-import {Button, Col, Row, message, Modal} from 'antd';
+import {Button, Col, Row, message, Modal, Empty} from 'antd';
 import styles from '../../styles/content.module.scss';
 import {
   EditOutlined,
@@ -16,9 +16,14 @@ import VideoManagementModal from '../../components/forms/VideoManagementModal';
 import {useNavigate, useParams} from 'react-router-dom';
 
 
-const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => {
+const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, loadingStatus}) => {
   if(Object.values(videoDetails).length === 0) {
-    return <Loading/>
+    if(loadingStatus) {
+      return <Loading/>
+    }
+    else {
+      return <Empty description={<span>İzlenecek video bulunmuyor.</span>}/>
+    }
   }
 
   const [videoWatch, setVideoWatch] = useState({});
@@ -142,6 +147,8 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
       width={600}
       title={videoEdit ? 'Video Düzenle' : 'Video Ekle'}
       open={addVideoModal}
+      okText='Tamam'
+      cancelText='İptal'
       onCancel={() => {
         setAddVideoModal(false);
         setVideoEdit(false);

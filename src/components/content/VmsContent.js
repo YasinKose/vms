@@ -57,14 +57,16 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
     getVideos().then(response => {
       if(response.status === 200) {
         let menuData = [...menuItemList];
-        for(let video of response.data.attr) {
-          video['key'] = video.slug;
-          video['label'] = video.title;
-          video['value'] = video.slug;
-          video['icon'] = <VideoCameraOutlined />
+        if(response.data.attr.length > 0) {
+          for(let video of response.data.attr) {
+            video['key'] = video.slug;
+            video['label'] = video.title;
+            video['value'] = video.slug;
+            video['icon'] = <VideoCameraOutlined />
+          }
+          menuData[0].children = response.data.attr;
+          videoListCallback(response.data.attr);
         }
-        menuData[0].children = response.data.attr;
-        videoListCallback(response.data.attr);
         setMenuLoading(false);
         setMenuItems(menuData);
       }
@@ -116,7 +118,7 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
       </>}
     </Layout.Sider>
     <Layout.Content className={styles['contentWrapper']}>
-      {window.location.pathname === '/user-list' ? <UserList/> : <VideoPlayer revokeVideoChange={selectHandler} revokeHandler={getVideosHandler} videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}
+      {window.location.pathname === '/user-list' ? <UserList/> : <VideoPlayer loadingStatus={menuLoading} revokeVideoChange={selectHandler} revokeHandler={getVideosHandler} videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}
     </Layout.Content>
   </Layout>
 }
