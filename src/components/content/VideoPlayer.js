@@ -17,6 +17,11 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 
 const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, loadingStatus}) => {
+  const [videoWatch, setVideoWatch] = useState({});
+  const [loadingVideo, setLoadingVideo] = useState(true);
+  const [addVideoModal, setAddVideoModal] = useState(false);
+  const [videoEdit, setVideoEdit] = useState(false);
+  const [selectedVideoDetails, setSelectedVideoDetails] = useState(videoDetails);
   if(Object.values(videoDetails).length === 0) {
     if(loadingStatus) {
       return <Loading/>
@@ -32,15 +37,26 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
         <Col span={24}>
           <Empty description={<span>İzlenecek video bulunmuyor.</span>}/>
         </Col>
+        <Modal
+          destroyOnClose={true}
+          width={600}
+          title={videoEdit ? 'Video Düzenle' : 'Video Ekle'}
+          open={addVideoModal}
+          okText='Tamam'
+          cancelText='İptal'
+          onCancel={() => {
+            setAddVideoModal(false);
+            setVideoEdit(false);
+          }}
+          footer={false}>
+          <VideoManagementModal revokeHandler={() => {
+            setAddVideoModal(false);
+            revokeHandler();
+          }} isEdit={videoEdit} videoDetails={selectedVideoDetails}/>
+        </Modal>
       </Row>
     }
   }
-
-  const [videoWatch, setVideoWatch] = useState({});
-  const [loadingVideo, setLoadingVideo] = useState(true);
-  const [addVideoModal, setAddVideoModal] = useState(false);
-  const [videoEdit, setVideoEdit] = useState(false);
-  const [selectedVideoDetails, setSelectedVideoDetails] = useState(videoDetails);
 
   const clientError = useClientError();
   const playerRef = useRef();
