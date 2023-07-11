@@ -74,7 +74,9 @@ function Home() {
     return (
       <Row>
         <Col className={styles['txtFormWrapper']} span={24}>
-          Ödemenizin onaylanması için kodunuzu aşağıda ki alana giriniz ve yönetimin onaylamasını bekleyiniz.
+          TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9 (TRC20 USDT) adresine ödemenizi yaptıktan sonra<br>
+
+          Gönderdiğiniz borsa uygulamasına girin. Cüzdanınıza tıklayın. Çekim Geçmişi'ne(Withdraw History) girin. Ücreti gönderdiğiniz işlemin üstüne tıklayın. Tx, Txid ya da Tx Hash kodunu kopyalayıp bu bölüme yapıştırın.
         </Col>
         <Col className={styles['txtFormWrapper']} span={12}>
           <Form form={txtFormType} onFinish={txtFormSubmitHandler}>
