@@ -2,7 +2,7 @@
 
 .tableActions {
   @include flexBox(center, space-between, row, wrap);
-  width: 100px;
+  width: 125px;
   .deleteButton {
     cursor: pointer;
     background-color: $softRed;

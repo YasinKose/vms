@@ -82,7 +82,7 @@ const UserList = () => {
       title: 'Aksiyon',
       dataIndex: '',
       key: 'action',
-      width: '270px',
+      width: '125px',
       render: (item) => <div className={styles['tableActions']}>
         <DeleteOutlined
             className={styles['forceDeleteButton']}
