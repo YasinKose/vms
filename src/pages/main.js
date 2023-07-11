@@ -73,10 +73,10 @@ function Home() {
   const txtForm = () => {
     return (
       <Row>
-        <Col className={styles['txtFormWrapper']} span={12}>
+        <Col className={styles['txtFormWrapper']} span={24}>
           TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9 (TRC20 USDT) adresine ödemenizi yaptıktan sonra
         </Col>
-        <Col className={styles['txtFormWrapper']} span={12}>
+        <Col className={styles['txtFormWrapper']} span={24}>
           Gönderdiğiniz borsa uygulamasına girin. Cüzdanınıza tıklayın. Çekim Geçmişi'ne(Withdraw History) girin. Ücreti
           gönderdiğiniz işlemin üstüne tıklayın. Tx, Txid ya da Tx Hash kodunu kopyalayıp bu bölüme yapıştırın.
         </Col>
