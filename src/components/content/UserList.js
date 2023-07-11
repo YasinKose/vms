@@ -56,16 +56,19 @@ const UserList = () => {
       title: 'Kullanıcı TXT',
       dataIndex: 'txt',
       key: 'txt',
+      render: (a) => a ?? '-'
     },
     {
       title: 'Twitter',
       dataIndex: 'twitter',
       key: 'twitter',
+      render: (a) => a ?? '-'
     },
     {
       title: 'Discord',
       dataIndex: 'discord',
       key: 'discord',
+      render: (a) => a ?? '-'
     },
     {
       title: 'Aksiyon',
