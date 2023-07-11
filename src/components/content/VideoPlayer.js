@@ -16,7 +16,7 @@ import VideoManagementModal from '../../components/forms/VideoManagementModal';
 import {useNavigate, useParams} from 'react-router-dom';
 
 
-const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, loadingStatus}) => {
+const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => {
   const [videoWatch, setVideoWatch] = useState({});
   const [loadingVideo, setLoadingVideo] = useState(true);
   const [addVideoModal, setAddVideoModal] = useState(false);
@@ -29,7 +29,9 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
   const param = useParams();
 
   useEffect(() => {
-    getVideoWatchDetails();
+    if(Object.values(videoDetails).length > 0 ) {
+      getVideoWatchDetails();
+    }
   }, [videoDetails, param.slug])
 
   const getVideoWatchDetails = () => {
