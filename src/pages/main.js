@@ -6,7 +6,7 @@ import {getProfileInformation} from '../HomeManager';
 import {useNavigate} from 'react-router-dom';
 import {Button, Col, Empty, Form, Input, message, Row} from 'antd';
 import styles from '../styles/content.module.scss';
-import {EditOutlined, StopOutlined} from '@ant-design/icons';
+import {StopOutlined} from '@ant-design/icons';
 import {postTxt} from '../components/content/ContentManager';
 import Loading from '../components/Loading';
 
@@ -73,6 +73,9 @@ function Home() {
     const txtForm = () => {
         return (
             <Row>
+                <Col className={styles['txtFormWrapper']} span={24}>
+                    <h2>Hesabınızı aktif etmeden önce ödemeyi yapınız!</h2>
+                </Col>
                 <Col className={styles['txtFormWrapper']} span={24}>
                     TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9 (TRC20 USDT) adresine ödemenizi yaptıktan sonra
                 </Col>
