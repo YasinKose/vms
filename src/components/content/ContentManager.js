@@ -20,6 +20,10 @@ export const deleteUser = async (uuid) => {
   return await axiosInstance.delete(`/users/${uuid}`);
 }
 
+export const forceDeleteUser = async (uuid) => {
+  return await axiosInstance.get(`/users/${uuid}/force-delete`);
+}
+
 export const restoreUser = async (uuid) => {
   return await axiosInstance.get(`/users/${uuid}/restore`);
 }
