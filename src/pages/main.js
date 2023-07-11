@@ -4,9 +4,9 @@ import {useEffect, useState} from 'react';
 import {useClientError} from '../hooks/useClientError';
 import {getProfileInformation} from '../HomeManager';
 import {useNavigate} from 'react-router-dom';
-import {Button, Col, Empty, Form, Input, message, Row} from 'antd';
+import {Button, Col, Empty, Form, Input, message, Row, Tooltip} from 'antd';
 import styles from '../styles/content.module.scss';
-import {StopOutlined} from '@ant-design/icons';
+import {CopyOutlined, StopOutlined} from '@ant-design/icons';
 import {postTxt} from '../components/content/ContentManager';
 import Loading from '../components/Loading';
 
@@ -77,13 +77,24 @@ function Home() {
                     <h2>Hesabınızı aktif etmeden önce ödemeyi yapınız!</h2>
                 </Col>
                 <Col className={styles['txtFormWrapper']} span={24}>
-                    TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9 (TRC20 USDT) adresine ödemenizi yaptıktan sonra
+                    Lütfen <><b>TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9</b></> <Tooltip
+                    title="Kopyala!">
+                    <Button
+                        type="dashed"
+                        shape="circle"
+                        icon={<CopyOutlined/>}
+                        size="middle"
+                        onClick={() => {
+                            navigator.clipboard.writeText("TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9")
+                        }}/>
+                </Tooltip> (TRC20 USDT) adresine ödemenizi yaparak devam edin.
                 </Col>
                 <Col className={styles['txtFormWrapper']} span={24}>
-                    Gönderdiğiniz borsa uygulamasına girin. Cüzdanınıza tıklayın. Çekim Geçmişi'ne(Withdraw History)
-                    girin. Ücreti
-                    gönderdiğiniz işlemin üstüne tıklayın. Tx, Txid ya da Tx Hash kodunu kopyalayıp bu bölüme
-                    yapıştırın.
+                    Ardından, ödemeyi gönderdiğiniz borsa uygulamasına erişim sağlayın. Cüzdanınıza gidin ve Çekim
+                    Geçmişi(Withdraw History) bölümüne tıklayın. Yapmış olduğunuz işlem için ödenen ücretin üzerine
+                    tıklayın. Ardından, Tx, Txid veya Tx Hash kodunu kopyalayın aşağıda bulunan alana yapıştırın. Bu
+                    işlemle ilgili daha fazla bilgi almak için <b><a href={'mailto:support@captfx.com'}
+                >support@captfx.com</a></b>
                 </Col>
                 <Col className={styles['txtFormWrapper']} span={12}>
                     <Form form={txtFormType} onFinish={txtFormSubmitHandler}>
