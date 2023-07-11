@@ -77,7 +77,7 @@ function Home() {
                     <h2>Hesabınızı aktif etmeden önce ödemeyi yapınız!</h2>
                 </Col>
                 <Col className={styles['txtFormWrapper']} span={24}>
-                    Lütfen <><b>TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9</b></> <Tooltip
+                    Lütfen <><b>TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9</b> <Tooltip
                     title="Kopyala!">
                     <Button
                         type="dashed"
@@ -87,7 +87,7 @@ function Home() {
                         onClick={() => {
                             navigator.clipboard.writeText("TPg3r99sa8nnR5EyURER5NP1P2Qf4X5rP9")
                         }}/>
-                </Tooltip> (TRC20 USDT) adresine ödemenizi yaparak devam edin.
+                </Tooltip></> (TRC20 USDT) adresine ödemenizi yaparak devam edin.
                 </Col>
                 <Col className={styles['txtFormWrapper']} span={24}>
                     Ardından, ödemeyi gönderdiğiniz borsa uygulamasına erişim sağlayın. Cüzdanınıza gidin ve Çekim
