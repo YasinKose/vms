@@ -206,7 +206,7 @@ const UserList = () => {
     <Col span={24}>
       <Table onRow={(record) => {
         return { style: {
-        backgroundColor: record.txt_verified ? '#c7fdb7' : '#fff'
+        backgroundColor: record.txt_verified ? '#00000014' : '#fff'
         }};
       }} dataSource={dataSource} columns={columns} loading={loading}/>
     </Col>
