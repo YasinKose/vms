@@ -1,11 +1,12 @@
 import {Button, Col, Form, Input, message, Modal, Row, Table, Typography} from 'antd';
 import {useEffect, useState} from 'react';
-import {deleteUser, getUserList, restoreUser, updateUser} from './ContentManager';
+import {deleteUser, getUserList, restoreUser, searchUserList, updateUser} from './ContentManager';
 import styles from '../../styles/list.module.scss';
 import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, RollbackOutlined} from '@ant-design/icons';
 import UserManagementModal from '../../components/forms/UserManagementModal';
 import {useClientError} from '../../hooks/useClientError';
-const {Text} = Typography;
+const {Search} = Input;
+
 const UserList = () => {
   const [userModal, setUserModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -57,10 +58,20 @@ const UserList = () => {
       key: 'txt',
     },
     {
+      title: 'Twitter',
+      dataIndex: 'twitter',
+      key: 'twitter',
+    },
+    {
+      title: 'Discord',
+      dataIndex: 'discord',
+      key: 'discord',
+    },
+    {
       title: 'Aksiyon',
       dataIndex: '',
       key: 'action',
-      width: '120px',
+      width: '100px',
       render: (item) => <div className={styles['tableActions']}>
         {item.deleted_at ? <RollbackOutlined className={styles['editButton']} onClick={() => actionClickHandler(item, 'restore')}/> : <DeleteOutlined className={styles['deleteButton']} onClick={() => actionClickHandler(item, 'delete')}/>}
         <EditOutlined className={styles['editButton']} onClick={() => actionClickHandler(item, 'edit')}/>
@@ -169,12 +180,35 @@ const UserList = () => {
     getUserHandler();
   }
 
+  const onSearch = (searchValue) => {
+    setLoading(true);
+    searchUserList(searchValue).then(response => {
+      if (response.status === 200) {
+        for (let user of response.data.attr) {
+          user['key'] = user.uuid
+        }
+        setDataSource(response.data.attr);
+      }
+      setLoading(false);
+    }).catch(err => {
+      clientError(err);
+      setLoading(false);
+    })
+  }
+
   return <Row gutter={[16, 16]}>
     <Col span={24}>
       <Button type='primary' onClick={() => setUserModal(true)}>Kullanıcı Ekle</Button>
     </Col>
+    <Col span={8}>
+      <Search placeholder="Kullanıcı Filtrele" onSearch={(searchValue) => onSearch(searchValue)} enterButton />
+    </Col>
     <Col span={24}>
-      <Table dataSource={dataSource} columns={columns}/>
+      <Table onRow={(record) => {
+        return { style: {
+        backgroundColor: record.txt_verified ? '#c7fdb7' : '#fff'
+        }};
+      }} dataSource={dataSource} columns={columns} loading={loading}/>
     </Col>
     <Modal
       destroyOnClose={true}

@@ -4,6 +4,10 @@ export const getUserList = async () => {
   return await axiosInstance.get('/users');
 }
 
+export const searchUserList = async (searchValue) => {
+  return await axiosInstance.get(`/users?search=${searchValue}`)
+}
+
 export const createUser = async (formValues) => {
   return await axiosInstance.post('/users', formValues);
 }

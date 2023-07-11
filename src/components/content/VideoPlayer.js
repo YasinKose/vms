@@ -22,41 +22,6 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
   const [addVideoModal, setAddVideoModal] = useState(false);
   const [videoEdit, setVideoEdit] = useState(false);
   const [selectedVideoDetails, setSelectedVideoDetails] = useState(videoDetails);
-  if(Object.values(videoDetails).length === 0) {
-    if(loadingStatus) {
-      return <Loading/>
-    }
-    else {
-      return <Row className={styles['playerHeader']}>
-        <Col className={styles['playerInformation']} span={24}>
-          {user?.is_admin && <>
-            <Button className={styles['webButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>
-            <Button className={styles['mobileButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}/>
-          </>}
-        </Col>
-        <Col span={24}>
-          <Empty description={<span>İzlenecek video bulunmuyor.</span>}/>
-        </Col>
-        <Modal
-          destroyOnClose={true}
-          width={600}
-          title={videoEdit ? 'Video Düzenle' : 'Video Ekle'}
-          open={addVideoModal}
-          okText='Tamam'
-          cancelText='İptal'
-          onCancel={() => {
-            setAddVideoModal(false);
-            setVideoEdit(false);
-          }}
-          footer={false}>
-          <VideoManagementModal revokeHandler={() => {
-            setAddVideoModal(false);
-            revokeHandler();
-          }} isEdit={videoEdit} videoDetails={selectedVideoDetails}/>
-        </Modal>
-      </Row>
-    }
-  }
 
   const clientError = useClientError();
   const playerRef = useRef();
@@ -71,11 +36,10 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
     setLoadingVideo(true);
     let videoSlug = param.slug ? param.slug : videoDetails.slug;
     getVideoDetails(videoSlug).then(response => {
-      if(response.status === 200) {
+      if (response.status === 200) {
         setSelectedVideoDetails(response.data.attr);
         setLoadingVideo(false);
-      }
-      else {
+      } else {
         message.error('Video hazırlanamadı.')
         setLoadingVideo(false);
       }
@@ -84,11 +48,10 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
       setLoadingVideo(false);
     })
     getVideoWatch(videoSlug).then(response => {
-      if(response.status === 200) {
+      if (response.status === 200) {
         setVideoWatch(response.data.attr);
         setLoadingVideo(false);
-      }
-      else {
+      } else {
         message.error('Video hazırlanamadı.')
         setLoadingVideo(false);
       }
@@ -99,19 +62,17 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
   }
 
   const skipVideo = (to) => {
-    if(to === 'next') {
+    if (to === 'next') {
       revokeVideoChange(selectedVideoDetails?.next_video?.slug);
-    }
-    else {
+    } else {
       revokeVideoChange(selectedVideoDetails?.previous_video?.slug);
     }
   }
 
   const videoMaker = () => {
-    if(videoWatch.watched_video.hls_url === null) {
+    if (videoWatch.watched_video.hls_url === null) {
       getVideoWatchDetails();
-    }
-    else {
+    } else {
       return <ReactHlsPlayer
         playerRef={playerRef}
         src={videoWatch.watched_video.hls_url}
@@ -128,46 +89,53 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
       <div>
         <span className={styles['playerHeaderBlock']}>&nbsp;</span>
         <strong>
-          {selectedVideoDetails.title}
+          {Object.values(videoDetails).length === 0 ? '' : selectedVideoDetails.title}
         </strong>
       </div>
       <div className={styles['playerInformation']}>
         {user?.is_admin && <>
-          <Button className={styles['webButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>
-          <Button className={styles['mobileButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}/>
+          <Button className={styles['webButton']} onClick={() => setAddVideoModal(true)} type='primary'
+                  icon={<VideoCameraAddOutlined/>}>Video Ekle</Button>
+          <Button className={styles['mobileButton']} onClick={() => setAddVideoModal(true)} type='primary'
+                  icon={<VideoCameraAddOutlined/>}/>
         </>}
-        {user?.is_admin && <>
+        {(user?.is_admin && Object.values(videoDetails).length > 0) && <>
           <Button className={styles['webButton']} onClick={() => {
             setAddVideoModal(true);
             setVideoEdit(true);
-          }} type='dashed' icon={<EditOutlined />}>Video Düzenle</Button>
+          }} type='dashed' icon={<EditOutlined/>}>Video Düzenle</Button>
           <Button className={styles['mobileButton']} onClick={() => {
             setAddVideoModal(true);
             setVideoEdit(true);
-          }} type='dashed' icon={<EditOutlined />}/>
+          }} type='dashed' icon={<EditOutlined/>}/>
         </>}
       </div>
     </Col>
-    <Col span={24}>
-      <p className={styles['videoDescription']}>
-        {selectedVideoDetails.description}
-      </p>
-    </Col>
-    <Col span={24} className={styles['videoPlayerWrapper']}>
-      {Object.values(videoWatch).length === 0 || loadingVideo ? <Loading/> : videoMaker() }
-    </Col>
-    <div className={styles['buttonWrapper']}>
-      <div>
-        {selectedVideoDetails?.previous_video && <Button type='primary' onClick={() => skipVideo('previous')} icon={<LeftCircleOutlined/>}>
-          {selectedVideoDetails?.previous_video?.title}
-        </Button>}
+    {Object.values(videoDetails).length === 0 ? <Col span={24}>
+      <Empty description={<span>İzlenecek video bulunmuyor.</span>}/>
+    </Col> : <>
+      <Col span={24}>
+        <p className={styles['videoDescription']}>
+          {selectedVideoDetails.description}
+        </p>
+      </Col>
+      <Col span={24} className={styles['videoPlayerWrapper']}>
+        {Object.values(videoWatch).length === 0 || loadingVideo ? <Loading/> : videoMaker()}
+      </Col>
+      <div className={styles['buttonWrapper']}>
+        <div>
+          {selectedVideoDetails?.previous_video && <Button type='primary' onClick={() => skipVideo('previous')} icon={<LeftCircleOutlined/>}>
+            {selectedVideoDetails?.previous_video?.title}
+          </Button>}
+        </div>
+        <div className={styles['nextWrapper']}>
+          {selectedVideoDetails?.next_video && <Button type='primary' onClick={() => skipVideo('next')} icon={<RightCircleOutlined/>}>
+            {selectedVideoDetails?.next_video?.title}
+          </Button>}
+        </div>
       </div>
-      <div className={styles['nextWrapper']}>
-        {selectedVideoDetails?.next_video && <Button type='primary' onClick={() => skipVideo('next')} icon={<RightCircleOutlined/>}>
-          {selectedVideoDetails?.next_video?.title}
-        </Button>}
-      </div>
-    </div>
+    </>
+    }
     <Modal
       destroyOnClose={true}
       width={600}
