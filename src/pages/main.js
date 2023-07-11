@@ -117,9 +117,22 @@ function Home() {
             <Row className={styles['txtWrapper']} gutter={[16, 16]}>
                 <Col className={styles['txtCol']} span={18}>
                     <Empty image={<StopOutlined style={{fontSize: 70, color: '#d1c749'}}/>} description={<>
-                        {user.txt ? <><h1>{user.txt}</h1><p>
-                            Hesabınız henüz onay aşamasındadır.
-                        </p></> : txtForm()}
+                        {user.verified ?
+                            user.txt ?
+                                <><h1>{user.txt}</h1><p>Hesabınız henüz onay aşamasındadır. </p></> :
+                                txtForm() :
+                            <>
+                                <Row>
+                                    <Col className={styles['txtFormWrapper']} span={24}>
+                                        <h2>Lütfen mail kutunuzu kontrol edin.</h2>
+                                    </Col>
+                                    <Col className={styles['txtFormWrapper']} span={24}>
+                                        Kayıt sürecinize devam etmek için öncelikle mail adresinizi doğrulamanız
+                                        gerekmektedir.
+                                    </Col>
+                                </Row>
+                            </>
+                        }
                     </>}/>
                 </Col>
             </Row>
