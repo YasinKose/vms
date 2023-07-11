@@ -1,22 +1,25 @@
 import Navbar from '../components/navigation/Navbar';
 import VmsContent from '../components/content/VmsContent';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useClientError} from '../hooks/useClientError';
 import {getProfileInformation} from '../HomeManager';
 import {useNavigate} from 'react-router-dom';
-import {Button, Col, Empty, Form, Input, message, Row, Tooltip} from 'antd';
+import {Button, Col, Empty, Form, Input, message, Modal, Row, Tooltip} from 'antd';
 import styles from '../styles/content.module.scss';
-import {CopyOutlined, StopOutlined} from '@ant-design/icons';
+import {CopyOutlined, PlayCircleOutlined, StopOutlined} from '@ant-design/icons';
 import {postTxt} from '../components/content/ContentManager';
 import Loading from '../components/Loading';
+import ReactHlsPlayer from 'react-hls-player';
 
 function Home() {
     const [user, setUser] = useState({});
     const [videoList, setVideoList] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const clientError = useClientError();
     const navigate = useNavigate();
     const {txtFormType} = Form.useForm();
+    const playerRef = useRef();
 
     const getUserHandler = () => {
         getProfileInformation().then(response => {
@@ -31,6 +34,13 @@ function Home() {
             }
         })
     }
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         if (localStorage.getItem('access_token')) {
@@ -95,6 +105,29 @@ function Home() {
                     tıklayın. Ardından, Tx, Txid veya Tx Hash kodunu kopyalayın aşağıda bulunan alana yapıştırın. Bu
                     işlemle ilgili daha fazla bilgi almak için <b><a href={'mailto:support@captfx.com'}
                 >support@captfx.com</a></b>
+                </Col>
+                <Col className={styles['txtFormWrapper']} span={24}>
+                    <>
+                        <Button
+                            type="primary"
+                            onClick={showModal}>
+                            Videolu anlatım izle <PlayCircleOutlined/>
+                        </Button>
+                        <Modal
+                            title="Tx, Txid veya Tx Hash kodu nasıl alınır?"
+                            open={isModalOpen}
+                            onCancel={handleCancel}
+                        >
+                            <ReactHlsPlayer
+                                playerRef={playerRef}
+                                src="https://api.captfx.com/info-video.m3u8"
+                                autoPlay={false}
+                                controls={true}
+                                width='100%'
+                                height='auto'
+                            />
+                        </Modal>
+                    </>
                 </Col>
                 <Col className={styles['txtFormWrapper']} span={12}>
                     <Form form={txtFormType} onFinish={txtFormSubmitHandler}>
