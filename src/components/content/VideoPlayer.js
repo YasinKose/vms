@@ -17,24 +17,17 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 
 const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, loadingStatus}) => {
-  const [videoWatch, setVideoWatch] = useState({});
-  const [loadingVideo, setLoadingVideo] = useState(true);
-  const [addVideoModal, setAddVideoModal] = useState(false);
-  const [videoEdit, setVideoEdit] = useState(false);
-  const [selectedVideoDetails, setSelectedVideoDetails] = useState(videoDetails);
   if(Object.values(videoDetails).length === 0) {
     if(loadingStatus) {
       return <Loading/>
     }
     else {
       return <Row className={styles['playerHeader']}>
-        <Col span={24}>
-          <div className={styles['playerInformation']}>
-            {user?.is_admin && <>
-              <Button className={styles['webButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>
-              <Button className={styles['mobileButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}/>
-            </>}
-          </div>
+        <Col className={styles['playerInformation']} span={24}>
+          {user?.is_admin && <>
+            <Button className={styles['webButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}>Video Ekle</Button>
+            <Button className={styles['mobileButton']} onClick={() => setAddVideoModal(true)} type='primary' icon={<VideoCameraAddOutlined />}/>
+          </>}
         </Col>
         <Col span={24}>
           <Empty description={<span>İzlenecek video bulunmuyor.</span>}/>
@@ -42,6 +35,12 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange, load
       </Row>
     }
   }
+
+  const [videoWatch, setVideoWatch] = useState({});
+  const [loadingVideo, setLoadingVideo] = useState(true);
+  const [addVideoModal, setAddVideoModal] = useState(false);
+  const [videoEdit, setVideoEdit] = useState(false);
+  const [selectedVideoDetails, setSelectedVideoDetails] = useState(videoDetails);
 
   const clientError = useClientError();
   const playerRef = useRef();
