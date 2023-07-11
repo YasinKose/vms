@@ -1,8 +1,15 @@
-import {Button, Col, Form, Input, message, Modal, Row, Table, Typography} from 'antd';
+import {Button, Col, Input, message, Modal, Row, Table} from 'antd';
 import {useEffect, useState} from 'react';
-import {deleteUser, getUserList, restoreUser, searchUserList, updateUser} from './ContentManager';
+import {forceDeleteUser, deleteUser, getUserList, restoreUser, searchUserList, updateUser} from './ContentManager';
 import styles from '../../styles/list.module.scss';
-import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, RollbackOutlined} from '@ant-design/icons';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  UserDeleteOutlined,
+  RollbackOutlined
+} from '@ant-design/icons';
 import UserManagementModal from '../../components/forms/UserManagementModal';
 import {useClientError} from '../../hooks/useClientError';
 const {Search} = Input;
@@ -10,6 +17,7 @@ const {Search} = Input;
 const UserList = () => {
   const [userModal, setUserModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [forceDeleteModal, setForceDeleteModal] = useState(false);
   const [restoreModal, setRestoreModal] = useState(false);
   const [approveModal, setApproveModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,11 +82,35 @@ const UserList = () => {
       title: 'Aksiyon',
       dataIndex: '',
       key: 'action',
-      width: '100px',
+      width: '270px',
       render: (item) => <div className={styles['tableActions']}>
-        {item.deleted_at ? <RollbackOutlined className={styles['editButton']} onClick={() => actionClickHandler(item, 'restore')}/> : <DeleteOutlined className={styles['deleteButton']} onClick={() => actionClickHandler(item, 'delete')}/>}
-        <EditOutlined className={styles['editButton']} onClick={() => actionClickHandler(item, 'edit')}/>
-        {item.txt_verified ? <CheckOutlined className={styles['disabledButton']}/> : <CheckOutlined onClick={() => actionClickHandler(item, 'approve')} className={styles['approveButton']}/>}
+        <DeleteOutlined
+            className={styles['forceDeleteButton']}
+            onClick={() => actionClickHandler(item, 'forceDelete')}
+        />
+
+        {item.deleted_at ?
+            <RollbackOutlined
+                className={styles['editButton']}
+                onClick={() => actionClickHandler(item, 'restore')}
+            /> :
+            <UserDeleteOutlined
+                className={styles['deleteButton']}
+                onClick={() => actionClickHandler(item, 'delete')}
+            />}
+
+        <EditOutlined
+            className={styles['editButton']}
+            onClick={() => actionClickHandler(item, 'edit')}
+        />
+
+        {item.txt_verified ? <CheckOutlined
+                className={styles['disabledButton']}
+            /> :
+            <CheckOutlined
+                onClick={() => actionClickHandler(item, 'approve')}
+                className={styles['approveButton']}
+            />}
       </div>
     },
   ];
@@ -113,7 +145,7 @@ const UserList = () => {
         message.success('Kullanıcı başarıyla geri alındı.')
         revoke();
         setLoading(false);
-        setDeleteModal(false);
+        setRestoreModal(false);
         setUserDetails({});
       }
       else {
@@ -129,14 +161,32 @@ const UserList = () => {
   const deleteMethodHandler = () => {
     setLoading(true);
     deleteUser(userDetails.uuid).then(response => {
-      if(response.status === 200) {
+      if (response.status === 200) {
         message.success('Kullanıcı başarıyla kaldırıldı.')
         revoke();
         setLoading(false);
         setDeleteModal(false);
         setUserDetails({});
+      } else {
+        message.error(response.data.message);
+        setLoading(false);
       }
-      else {
+    }).catch(error => {
+      clientError(error);
+      setLoading(false);
+    })
+  }
+
+  const forceDeleteMethodHandler = () => {
+    setLoading(true);
+    forceDeleteUser(userDetails.uuid).then(response => {
+      if (response.status === 200) {
+        message.success('Kullanıcı başarıyla sistemden kaldırıldı.')
+        revoke();
+        setLoading(false);
+        setForceDeleteModal(false);
+        setUserDetails({});
+      } else {
         message.error(response.data.message);
         setLoading(false);
       }
@@ -163,16 +213,19 @@ const UserList = () => {
 
   const actionClickHandler = (details, type) => {
     setUserDetails(details);
-    if(type === 'delete') {
+    if (type === 'delete') {
       setDeleteModal(true);
     }
-    if(type === 'restore') {
+    if (type === 'forceDelete') {
+      setForceDeleteModal(true);
+    }
+    if (type === 'restore') {
       setRestoreModal(true);
     }
-    if(type === 'edit') {
+    if (type === 'edit') {
       setUserModal(true);
     }
-    if(type === 'approve') {
+    if (type === 'approve') {
       setApproveModal(true);
     }
   }
@@ -208,66 +261,82 @@ const UserList = () => {
     </Col>
     <Col span={24}>
       <Table onRow={(record) => {
-        return { style: {
-        backgroundColor: record.txt_verified ? '#00000014' : '#fff'
-        }};
+        return {
+          style: {
+            backgroundColor: record.txt_verified ? '#00000014' : '#fff'
+          }
+        };
       }} dataSource={dataSource} columns={columns} loading={loading}/>
     </Col>
     <Modal
-      destroyOnClose={true}
-      width={600}
-      title={Object.values(userDetails).length === 0 ? 'Kullanıcı Oluştur' : 'Kullanıcıyı Düzenle'}
-      open={userModal}
-      okText='Tamam'
-      cancelText='İptal'
-      onCancel={() => {
-        setUserModal(false);
-        setUserDetails({});
-      }}
-      footer={false}>
+        destroyOnClose={true}
+        width={600}
+        title={Object.values(userDetails).length === 0 ? 'Kullanıcı Oluştur' : 'Kullanıcıyı Düzenle'}
+        open={userModal}
+        okText='Tamam'
+        cancelText='İptal'
+        onCancel={() => {
+          setUserModal(false);
+          setUserDetails({});
+        }}
+        footer={false}>
       <UserManagementModal revokeHandler={revoke} userDetails={userDetails}/>
     </Modal>
     <Modal
-      destroyOnClose={true}
-      width={600}
-      title='Kullanıcı Silme Uyarısı'
-      open={deleteModal}
-      okText='Tamam'
-      cancelText='İptal'
-      onCancel={() => {
-        setDeleteModal(false);
-        setUserDetails({});
-      }}
-      onOk={deleteMethodHandler}>
-      {userDetails.name + ' ' + userDetails.surname} kullanıcısı silinecek, onaylıyor musunuz?
+        destroyOnClose={true}
+        width={600}
+        title='Kullanıcı Silme Uyarısı'
+        open={deleteModal}
+        okText='Tamam'
+        cancelText='İptal'
+        onCancel={() => {
+          setDeleteModal(false);
+          setUserDetails({});
+        }}
+        onOk={deleteMethodHandler}>
+      {userDetails.name + ' ' + userDetails.surname} kullanıcısı askıya alınacak, onaylıyor musunuz?
     </Modal>
     <Modal
-      destroyOnClose={true}
-      width={600}
-      title='Kullanıcı Geri Alma Uyarısı'
-      open={restoreModal}
-      okText='Tamam'
-      cancelText='İptal'
-      onCancel={() => {
-        setRestoreModal(false);
-        setUserDetails({});
-      }}
-      onOk={restoreMethodHandler}>
+        destroyOnClose={true}
+        width={600}
+        title='Kullanıcı Silme Uyarısı'
+        open={forceDeleteModal}
+        okText='Tamam'
+        cancelText='İptal'
+        onCancel={() => {
+          setForceDeleteModal(false);
+          setUserDetails({});
+        }}
+        onOk={forceDeleteMethodHandler}>
+      {userDetails.name + ' ' + userDetails.surname} kullanıcısı sistemden kaldırılacak, onaylıyor musunuz?
+    </Modal>
+    <Modal
+        destroyOnClose={true}
+        width={600}
+        title='Kullanıcı Geri Alma Uyarısı'
+        open={restoreModal}
+        okText='Tamam'
+        cancelText='İptal'
+        onCancel={() => {
+          setRestoreModal(false);
+          setUserDetails({});
+        }}
+        onOk={restoreMethodHandler}>
       {userDetails.name + ' ' + userDetails.surname} kullanıcısı geri alınacak, onaylıyor musunuz?
     </Modal>
     <Modal
-      destroyOnClose={true}
-      width={600}
-      title='Kullanıcı Onaylama Uyarısı'
-      open={approveModal}
-      okText='Tamam'
-      cancelText='İptal'
-      onCancel={() => {
-        setApproveModal(false);
-        setUserDetails({});
-      }}
-      okButtonProps={{loading: loading}}
-      onOk={approveMethodHandler}>
+        destroyOnClose={true}
+        width={600}
+        title='Kullanıcı Onaylama Uyarısı'
+        open={approveModal}
+        okText='Tamam'
+        cancelText='İptal'
+        onCancel={() => {
+          setApproveModal(false);
+          setUserDetails({});
+        }}
+        okButtonProps={{loading: loading}}
+        onOk={approveMethodHandler}>
       {userDetails.name + ' ' + userDetails.surname} kullanıcısının TXT'si onaylanacak, onaylıyor musunuz?
     </Modal>
   </Row>;
