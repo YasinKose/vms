@@ -32,6 +32,7 @@
       background-color: $midGreen;
     }
   }
+
   .editButton {
     cursor: pointer;
     background-color: $softYellow;
@@ -39,8 +40,22 @@
     padding: .35rem;
     border-radius: $fullRadius;
     transition: .25s;
+
     &:hover {
       background-color: $midYellow;
+    }
+  }
+
+  .forceDeleteButton {
+    cursor: pointer;
+    background-color: $softRed;
+    color: $deepRed;
+    padding: .35rem;
+    border-radius: $fullRadius;
+    transition: .25s;
+
+    &:hover {
+      background-color: $midRed;
     }
   }
 }
