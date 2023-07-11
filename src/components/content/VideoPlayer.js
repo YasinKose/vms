@@ -1,12 +1,6 @@
-import {Button, Col, Row, message, Modal, Empty} from 'antd';
+import {Button, Col, Empty, message, Modal, Row} from 'antd';
 import styles from '../../styles/content.module.scss';
-import {
-  EditOutlined,
-  LeftCircleOutlined,
-  RightCircleFilled,
-  RightCircleOutlined,
-  VideoCameraAddOutlined
-} from '@ant-design/icons';
+import {EditOutlined, LeftCircleOutlined, RightCircleOutlined, VideoCameraAddOutlined} from '@ant-design/icons';
 import ReactHlsPlayer from 'react-hls-player';
 import {useEffect, useRef, useState} from 'react';
 import {getVideoDetails, getVideoWatch} from './ContentManager';
@@ -88,12 +82,16 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
 
   return <Row>
     <Col span={24} className={styles['playerHeader']}>
-      <div>
-        <span className={styles['playerHeaderBlock']}>&nbsp;</span>
-        <strong>
-          {Object.values(videoDetails).length === 0 ? '' : selectedVideoDetails.title}
-        </strong>
-      </div>
+      {
+        Object.values(videoDetails).length === 0 ?
+            "" :
+            <div>
+              <span className={styles['playerHeaderBlock']}>&nbsp;</span>
+              <strong>
+                {Object.values(videoDetails).length === 0 ? '' : selectedVideoDetails.title}
+              </strong>
+            </div>
+      }
       <div className={styles['playerInformation']}>
         {user?.is_admin && <>
           <Button className={styles['webButton']} onClick={() => setAddVideoModal(true)} type='primary'
