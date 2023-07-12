@@ -4,7 +4,7 @@ import {registerHandler} from './FormManager';
 import logo from '../../assets/images/logo.jpeg';
 import {useClientError} from '../../hooks/useClientError';
 import {Link, useNavigate} from 'react-router-dom';
-import {InfoCircleOutlined, InfoOutlined} from '@ant-design/icons';
+import {InfoCircleOutlined} from '@ant-design/icons';
 
 const LoginForm = () => {
   const [registerForm] = Form.useForm();
@@ -56,10 +56,12 @@ const LoginForm = () => {
       <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='twitter'>
         <Input placeholder='Twitter'/>
       </Form.Item>
-      <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='discord'>
-        <Input placeholder='Discord'/>
-        <InfoCircleOutlined onClick={discordInfoHandler} className={styles['discordInfo']} />
-      </Form.Item>
+      <div className={styles['discordWrapper']}>
+        <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='discord'>
+          <Input placeholder='Discord'/>
+        </Form.Item>
+        <InfoCircleOutlined onClick={discordInfoHandler} className={styles['discordInfo']}/>
+      </div>
       <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='password'>
         <Input type='password' placeholder='Şifre'/>
       </Form.Item>
