@@ -14,7 +14,7 @@ const AppRouter = () => {
       <Route path="/watch/:slug" element={<Home/>}/>
       <Route path="/register" element={<Register/>}/>
       <Route path="/reset-password/:id" element={<ResetPassword/>}/>
-      <Route path="/check-authorization/:token/:username" element={<CheckAuthorization/>}/>
+      <Route path="/check-authorization/:userUuid/:verificationToken" element={<CheckAuthorization/>}/>
     </Routes>
   )
 }
