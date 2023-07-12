@@ -90,13 +90,13 @@ const LoginForm = () => {
         onFinish={resetPasswordFormHandler}
       >
         <p>
-          Aşağıda gireceğiniz mail adresi, sistemimizde ki hesap ile eşleşirse bir token göndereceğiz.
+          Girdiğiniz e-posta adresi sistemimizde kayıtlı ise, bir doğrulama kodu gönderilecektir.
         </p>
         <Form.Item rules={[{required: true, message: 'Bu alan zorunludur.'}]} name='email'>
           <Input placeholder='Email'/>
         </Form.Item>
         <Button type='primary' htmlType='submit'>
-          Token Gönder!
+          Kurtarma Maili Gönder!
         </Button>
       </Form>
     </Modal>
