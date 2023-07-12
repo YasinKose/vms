@@ -3,6 +3,27 @@
 .reusableFormWrapper {
   border-radius: $borderRadius;
 }
+
+.discordInfo {
+  background: #1777ff;
+  color: #fff;
+  padding: 4px;
+  border-radius: 4px;
+  position: absolute;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  width: 32px;
+  cursor: pointer;
+  transition: .25s all ease;
+  &:hover {
+    background: #0669f4;
+  }
+}
+
 .formWrapper {
   height: calc(100vh - 1rem);
   border-radius: $borderRadius;
