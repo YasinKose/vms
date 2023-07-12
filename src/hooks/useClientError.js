@@ -27,7 +27,12 @@ export function useClientError() {
     }
 
     if (error.response?.status === 404) {
-      return history.replace('/404');
+      let dataErrors = combineValuesWithCommas(error.response?.data.errors)
+      return notification.error({
+        message: error.response.data.message,
+        description: error?.response?.data?.errors ? <div
+          dangerouslySetInnerHTML={{__html: dataErrors.replaceAll('.', '. <br /><br />')}}></div> : 'Bir hata oluştu',
+      });
     } else {
       let dataErrors = combineValuesWithCommas(error.response?.data.errors)
       return notification.error({
