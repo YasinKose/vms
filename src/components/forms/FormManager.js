@@ -19,3 +19,7 @@ export const resetPasswordHandlerTwo = async (formValues) => {
 export const checkAuth = async (token) => {
   return await axiosInstance.get(`/auth/verify-email/${token}`)
 }
+
+export const checkResetPasswordToken = async (resetToken) => {
+  return await axiosInstance.post(`/auth/check-reset-password-token`, {token: resetToken})
+}
