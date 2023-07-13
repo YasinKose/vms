@@ -112,7 +112,7 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
       </div>
     </Col>
     {Object.values(videoDetails).length === 0 ? <Col span={24}>
-      <Empty description={<span>İzlenecek video bulunmuyor.</span>}/>
+      <Empty description={<span>Üye kayıt süreci tamamlandıktan sonra videolar açılacaktır!</span>}/>
     </Col> : <>
       <Col span={24}>
         <p className={styles['videoDescription']}>
