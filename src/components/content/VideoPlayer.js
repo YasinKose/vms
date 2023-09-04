@@ -1,6 +1,8 @@
-import {Button, Col, Empty, message, Modal, Row} from 'antd';
+import {Alert, Button, Col, Empty, message, Modal, Row} from 'antd';
 import styles from '../../styles/content.module.scss';
-import {EditOutlined, LeftCircleOutlined, RightCircleOutlined, VideoCameraAddOutlined} from '@ant-design/icons';
+import {
+  EditOutlined, LeftCircleOutlined, PlayCircleOutlined, RightCircleOutlined, VideoCameraAddOutlined
+} from '@ant-design/icons';
 import ReactHlsPlayer from 'react-hls-player';
 import {useEffect, useRef, useState} from 'react';
 import {getVideoDetails, getVideoWatch} from './ContentManager';
@@ -65,18 +67,69 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
     }
   }
 
+  const openVideoInNewTab = () => {
+    const videoUrl = `https://api.captfx.com/watch/${videoWatch.watched_video.uuid}`;
+    window.open(videoUrl, "_blank");
+  };
+
   const videoMaker = () => {
-    if (videoWatch.watched_video.hls_url === null) {
-      getVideoWatchDetails();
+    if (videoWatch.video.uuid === null) {
+      if (videoWatch.watched_video.hls_url === null) {
+        getVideoWatchDetails();
+      } else {
+        return <ReactHlsPlayer
+            playerRef={playerRef}
+            src={videoWatch.watched_video.hls_url}
+            autoPlay={false}
+            controls={true}
+            width='100%'
+            height='auto'
+        />
+      }
     } else {
-      return <ReactHlsPlayer
-        playerRef={playerRef}
-        src={videoWatch.watched_video.hls_url}
-        autoPlay={false}
-        controls={true}
-        width='100%'
-        height='auto'
-      />
+      return <>
+        <Alert
+            className={styles['mb']}
+            message="Aşağıdaki butonu kullanarak videoyu izleme ekranına geçiş yapabilirsiniz."
+            type="warning"
+        />
+
+        <Alert
+            className={styles['mb']}
+            message={
+              <div>
+                <p>Herkese selamlar!</p>
+                <p>Size önemli bir hatırlatma yapmak istiyoruz:</p>
+                <p>
+                  Video platformumuzda yer alan videoların kaydını almak veya indirmek kesinlikle yasaktır. Bu tür bir
+                  davranış tespit edildiğinde, kullanıcının hesabı süresiz olarak kapatılacak ve yasal süreç
+                  başlatılacaktır.
+                </p>
+                <p>
+                  Ayrıca, daha önce yaşadığımız bazı sıkıntılardan ötürü videolara erişimde belirli bir kısıtlama
+                  mevcuttur. Sitemize yalnızca "2 ayrı türdeki cihazdan" giriş yapmanıza izin verilmektedir. Bu, bir
+                  PC/Laptop ve bir Mobil cihaz (ipad/telefon) şeklinde olabilir.
+                </p>
+                <p>
+                  Lütfen unutmayın ki, aynı türdeki cihazlarla (örneğin 2 PC veya 2 mobil cihaz) giriş yapmak yasaktır
+                  ve sistem tarafından otomatik olarak tespit edilip kullanıcının erişimi kesilecektir.
+                </p>
+                <p>
+                  Bu kısıtlamaların amacı, platformumuzdaki içeriği adil ve güvenli bir şekilde paylaşmak ve tüm
+                  kullanıcılarımıza keyifli bir deneyim sunmaktır.
+                </p>
+                <p>
+                  Anlayışınız ve işbirliğiniz için teşekkür ederiz. Sizlerle birlikte güvenli ve kaliteli bir eğitim
+                  serüveni yaşamak için buradayız. İyi seyirler!
+                </p>
+              </div>
+            }
+            type="warning"
+        />
+        <Button type='primary'
+                onClick={openVideoInNewTab}
+                icon={<PlayCircleOutlined/>}>Videoya Git</Button>
+      </>
     }
   }
 
@@ -124,30 +177,32 @@ const VideoPlayer = ({user, videoDetails, revokeHandler, revokeVideoChange}) => 
       </Col>
       <div className={styles['buttonWrapper']}>
         <div>
-          {selectedVideoDetails?.previous_video && <Button type='primary' onClick={() => skipVideo('previous')} icon={<LeftCircleOutlined/>}>
-            {selectedVideoDetails?.previous_video?.title}
-          </Button>}
+          {selectedVideoDetails?.previous_video &&
+              <Button type='primary' onClick={() => skipVideo('previous')} icon={<LeftCircleOutlined/>}>
+                {selectedVideoDetails?.previous_video?.title}
+              </Button>}
         </div>
         <div className={styles['nextWrapper']}>
-          {selectedVideoDetails?.next_video && <Button type='primary' onClick={() => skipVideo('next')} icon={<RightCircleOutlined/>}>
-            {selectedVideoDetails?.next_video?.title}
-          </Button>}
+          {selectedVideoDetails?.next_video &&
+              <Button type='primary' onClick={() => skipVideo('next')} icon={<RightCircleOutlined/>}>
+                {selectedVideoDetails?.next_video?.title}
+              </Button>}
         </div>
       </div>
     </>
     }
     <Modal
-      destroyOnClose={true}
-      width={600}
-      title={videoEdit ? 'Video Düzenle' : 'Video Ekle'}
-      open={addVideoModal}
-      okText='Tamam'
-      cancelText='İptal'
-      onCancel={() => {
-        setAddVideoModal(false);
-        setVideoEdit(false);
-      }}
-      footer={false}>
+        destroyOnClose={true}
+        width={600}
+        title={videoEdit ? 'Video Düzenle' : 'Video Ekle'}
+        open={addVideoModal}
+        okText='Tamam'
+        cancelText='İptal'
+        onCancel={() => {
+          setAddVideoModal(false);
+          setVideoEdit(false);
+        }}
+        footer={false}>
       <VideoManagementModal revokeHandler={() => {
         setAddVideoModal(false);
         revokeHandler();
