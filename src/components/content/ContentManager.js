@@ -1,7 +1,9 @@
 import axiosInstance, {axiosInstanceFileUpload} from '../../lib/service/service';
 
-export const getUserList = async () => {
-  return await axiosInstance.get('/users');
+export const getUserList = async (includeTwoMonthParam = false) => {
+  const url = includeTwoMonthParam ? '/users?twoMonth' : '/users';
+
+  return await axiosInstance.get(url);
 }
 
 export const searchUserList = async (searchValue) => {

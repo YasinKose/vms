@@ -1,17 +1,18 @@
 import {Button, Col, Input, message, Modal, Row, Table} from 'antd';
 import {useEffect, useState} from 'react';
-import {forceDeleteUser, deleteUser, getUserList, restoreUser, searchUserList, updateUser} from './ContentManager';
+import {deleteUser, forceDeleteUser, getUserList, restoreUser, searchUserList, updateUser} from './ContentManager';
 import styles from '../../styles/list.module.scss';
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
-  UserDeleteOutlined,
-  RollbackOutlined
+  RollbackOutlined,
+  UserDeleteOutlined
 } from '@ant-design/icons';
 import UserManagementModal from '../../components/forms/UserManagementModal';
 import {useClientError} from '../../hooks/useClientError';
+
 const {Search} = Input;
 
 const UserList = () => {
@@ -197,7 +198,18 @@ const UserList = () => {
   }
 
   const getUserHandler = () => {
-    getUserList().then(response => {
+    const params = new URLSearchParams(location.search);
+
+    const twoMonth = params.has('twoMonth');
+
+    let getList;
+    if (twoMonth) {
+      getList = getUserList(true);
+    } else {
+      getList = getUserList(false)
+    }
+
+    getList.then(response => {
       if (response.status === 200) {
         for (let user of response.data.attr) {
           user['key'] = user.uuid

@@ -1,4 +1,4 @@
-import {message, Layout, Menu, Spin, Input, Select,} from 'antd';
+import {Layout, Menu, message, Select, Spin,} from 'antd';
 import styles from '../../styles/content.module.scss';
 import {HomeOutlined, UserSwitchOutlined, VideoCameraOutlined} from '@ant-design/icons';
 import React, {useEffect, useState} from 'react';
@@ -22,8 +22,14 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
     user && user?.is_admin &&
     {
       label: 'Kullanıcılar',
-      icon: <UserSwitchOutlined />,
+      icon: <UserSwitchOutlined/>,
       key: 2
+    },
+    user && user?.is_admin &&
+    {
+      label: 'İkinci Ayın Kullanıcıları',
+      icon: <UserSwitchOutlined/>,
+      key: 3
     }
   ]
   const [menuItems, setMenuItems] = useState(menuItemList);
@@ -85,13 +91,18 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
       navigate(`/watch/${e.key}`);
     }
     if(e.key === '2') {
-      navigate('/user-list')
+      window.location.href = '/user-list';
+    }
+    if(e.key === '3') {
+      window.location.href = '/user-list?twoMonth';
     }
   }
 
   const selectHandler = (selectedSlug) => {
     navigate(`/watch/${selectedSlug}`);
   }
+
+  const params = new URLSearchParams(location.search);
 
   return <Layout className={styles['layoutWrapper']}>
     <Layout.Sider breakpoint="md" collapsible={true} width={330} className={styles['sideWrapper']}>
@@ -109,16 +120,19 @@ const VmsContent = ({user, videoListCallback, selectedVideoFromSelector}) => {
             options={menuItems[0]?.children}/>
         </div>
         <Menu
-          mode='inline'
-          selectedKeys={window.location.pathname === '/user-list' ? '2' : ['1', param.slug ? param.slug : menuItems[0].children ? menuItems[0].children[0].slug : null]}
-          defaultOpenKeys={openKey}
-          items={menuItems}
-          onClick={onClick}
+            mode='inline'
+            selectedKeys={params.has('twoMonth')?'3':(window.location.pathname === '/user-list' ? '2' : ['1', param.slug ? param.slug : menuItems[0].children ? menuItems[0].children[0].slug : null])}
+            defaultOpenKeys={openKey}
+            items={menuItems}
+            onClick={onClick}
         />
       </>}
     </Layout.Sider>
     <Layout.Content className={styles['contentWrapper']}>
-      {window.location.pathname === '/user-list' ? <UserList/> : <VideoPlayer loadingStatus={menuLoading} revokeVideoChange={selectHandler} revokeHandler={getVideosHandler} videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}
+      {window.location.pathname === '/user-list' ?
+          <UserList/> :
+          <VideoPlayer loadingStatus={menuLoading} revokeVideoChange={selectHandler} revokeHandler={getVideosHandler}
+                       videoDetails={menuItems[0]?.children ? menuItems[0].children[0] : {}} user={user}/>}
     </Layout.Content>
   </Layout>
 }
